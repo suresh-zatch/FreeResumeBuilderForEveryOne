@@ -30,6 +30,48 @@ const THEMES: { id: ResumeTheme; name: string; description: string; tag: string 
     description: 'Traditional formal layout with serif typography, centered header, and classic dividers.',
     tag: 'Traditional',
   },
+  {
+    id: 'executive',
+    name: 'Executive',
+    description: 'Authoritative dark banner header, serif headings, left border accents & clean executive style.',
+    tag: 'Executive',
+  },
+  {
+    id: 'creative',
+    name: 'Creative',
+    description: 'Artistic 35% colored sidebar with white text, skill tags, and timeline markers.',
+    tag: 'Creative',
+  },
+  {
+    id: 'technical',
+    name: 'Technical',
+    description: 'Developer README aesthetic with code comments, inline badges, and monospace details.',
+    tag: 'Tech',
+  },
+  {
+    id: 'elegant',
+    name: 'Elegant',
+    description: 'Refined centered layout with delicate tracking, diamond ornaments, and luxury typography.',
+    tag: 'Luxury',
+  },
+  {
+    id: 'bold',
+    name: 'Bold',
+    description: 'High-impact full-width accent header, bold typography, and vibrant skill badges.',
+    tag: 'Impact',
+  },
+  {
+    id: 'compact',
+    name: 'Compact',
+    description: 'Dense 40/60 split layout maximizing content for senior roles and extensive experience.',
+    tag: 'Dense',
+  },
+  {
+    id: 'professional',
+    name: 'Professional',
+    description: 'Polished corporate grid layout with subtle accent top border and clear hierarchy.',
+    tag: 'Corporate',
+  },
 ];
 
 const ACCENT_COLORS = [

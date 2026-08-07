@@ -1,4 +1,4 @@
-export type ResumeTheme = 'modern' | 'minimal' | 'classic';
+export type ResumeTheme = 'modern' | 'minimal' | 'classic' | 'executive' | 'creative' | 'technical' | 'elegant' | 'bold' | 'compact' | 'professional';
 
 export interface PersonalInfo {
   fullName: string;

@@ -5,6 +5,13 @@ import { ResumeData } from '@/types/resume';
 import { ModernTemplate } from '@/components/templates/ModernTemplate';
 import { MinimalTemplate } from '@/components/templates/MinimalTemplate';
 import { ClassicTemplate } from '@/components/templates/ClassicTemplate';
+import { ExecutiveTemplate } from '@/components/templates/ExecutiveTemplate';
+import { CreativeTemplate } from '@/components/templates/CreativeTemplate';
+import { TechnicalTemplate } from '@/components/templates/TechnicalTemplate';
+import { ElegantTemplate } from '@/components/templates/ElegantTemplate';
+import { BoldTemplate } from '@/components/templates/BoldTemplate';
+import { CompactTemplate } from '@/components/templates/CompactTemplate';
+import { ProfessionalTemplate } from '@/components/templates/ProfessionalTemplate';
 import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 
 interface Props {
@@ -21,6 +28,20 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview' }) 
         return <MinimalTemplate data={data} />;
       case 'classic':
         return <ClassicTemplate data={data} />;
+      case 'executive':
+        return <ExecutiveTemplate data={data} />;
+      case 'creative':
+        return <CreativeTemplate data={data} />;
+      case 'technical':
+        return <TechnicalTemplate data={data} />;
+      case 'elegant':
+        return <ElegantTemplate data={data} />;
+      case 'bold':
+        return <BoldTemplate data={data} />;
+      case 'compact':
+        return <CompactTemplate data={data} />;
+      case 'professional':
+        return <ProfessionalTemplate data={data} />;
       case 'modern':
       default:
         return <ModernTemplate data={data} />;
