@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ResumeData, ResumeTheme } from '@/types/resume';
 import { AiFusion2026Template } from '@/components/templates/AiFusion2026Template';
 import { CyberTech2026Template } from '@/components/templates/CyberTech2026Template';
@@ -67,6 +67,24 @@ const THEME_OPTIONS: { id: ResumeTheme; name: string }[] = [
 
 export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', onThemeChange }) => {
   const [zoom, setZoom] = useState<number>(0.85);
+  const [tilt, setTilt] = useState<{ rx: number; ry: number }>({ rx: 0, ry: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+
+    const ry = (x / (rect.width / 2)) * 6;  // Interactive 3D tilt
+    const rx = -(y / (rect.height / 2)) * 6;
+
+    setTilt({ rx, ry });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ rx: 0, ry: 0 });
+  };
 
   const renderTemplate = () => {
     switch (data.theme) {
@@ -130,9 +148,9 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
       {/* Hologram Controls Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-slate-900 border-b border-cyan-500/30 text-xs font-mono">
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="font-bold text-cyan-300 tracking-wider">HOLOGRAM_PREVIEW</span>
-          <span className="text-[10px] text-slate-500 hidden sm:inline">(A4 CRISP CANVAS)</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+          <span className="font-bold text-cyan-300 tracking-wider">3D_HOLOGRAM_PREVIEW</span>
+          <span className="text-[10px] text-slate-500 hidden sm:inline">(DRAG MOUSE TO TILT)</span>
         </div>
 
         {/* Instant Theme Dropdown Selector */}
@@ -200,19 +218,26 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
         </div>
       </div>
 
-      {/* Crystal Clear Viewport Canvas */}
-      <div className="flex-1 overflow-auto p-4 flex justify-center items-start bg-slate-950/80">
+      {/* 3D Holographic Viewport Canvas with Mouse Tracking */}
+      <div
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="flex-1 overflow-auto p-4 flex justify-center items-start bg-slate-950/80 cursor-grab active:cursor-grabbing"
+        style={{ perspective: '1200px' }}
+      >
         <div
-          className="transition-transform duration-150 origin-top"
+          className="transition-transform duration-100 ease-out origin-top"
           style={{
-            transform: `scale(${zoom})`,
-            WebkitFontSmoothing: 'subpixel-antialiased',
+            transform: `scale(${zoom}) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+            transformStyle: 'preserve-3d',
+            backfaceVisibility: 'hidden',
           }}
         >
-          {/* Target capturing element for PDF Export - 100% Crisp White A4 Paper */}
+          {/* Target capturing element for PDF Export - High Contrast Clean A4 Paper */}
           <div
             id={id}
-            className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-2xl overflow-hidden border border-cyan-400/40 relative antialiased"
+            className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-[0_0_35px_rgba(0,229,255,0.25)] overflow-hidden border border-cyan-400/40 relative antialiased"
           >
             {renderTemplate()}
           </div>

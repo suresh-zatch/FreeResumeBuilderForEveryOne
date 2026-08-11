@@ -119,9 +119,6 @@ export default function Home() {
       {/* 3D Particle Canvas Mesh Background */}
       <CyberParticleCanvas />
 
-      {/* CRT Scanline FX Overlay */}
-      <div className="scanlines-overlay" />
-
       {/* Top Cyber Command Center HUD Bar */}
       <Header
         onExportPdf={handleExportPdf}
