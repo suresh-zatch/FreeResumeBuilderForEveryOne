@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
-import { FileDown, Printer, RefreshCw, Trash2, Sparkles, ShieldCheck } from 'lucide-react';
+import React, { useState } from 'react';
+import { FileDown, Printer, RefreshCw, Trash2, ShieldCheck, Terminal, Volume2, VolumeX, Cpu } from 'lucide-react';
+import { sfx } from '@/utils/audioSfx';
 
 interface Props {
   onExportPdf: () => void;
@@ -16,71 +17,115 @@ export const Header: React.FC<Props> = ({
   onResetSampleData,
   onClearData,
 }) => {
+  const [sfxActive, setSfxActive] = useState<boolean>(true);
+
+  const handleToggleSound = () => {
+    const newState = sfx.toggleSound();
+    setSfxActive(newState);
+  };
+
   return (
-    <header className="sticky top-0 z-30 bg-slate-950/95 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3.5 shadow-xl text-white">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        {/* Brand Logo & Tag */}
+    <header className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-xl border-b border-cyan-500/30 px-4 lg:px-8 py-3 shadow-2xl shadow-cyan-950/50">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+        {/* Command Center Brand Logo & HUD Status */}
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-indigo-500 via-blue-600 to-teal-400 rounded-2xl text-white shadow-lg shadow-indigo-500/30 flex items-center justify-center border border-white/20">
-            <Sparkles className="w-5 h-5 text-white animate-pulse" />
+          <div className="p-2.5 bg-slate-900 border border-cyan-400/50 rounded-xl text-cyan-400 shadow-[0_0_15px_rgba(0,229,255,0.3)] flex items-center justify-center">
+            <Terminal className="w-5 h-5 animate-pulse" />
           </div>
           <div>
-            <h1 className="text-base font-extrabold tracking-tight text-white flex items-center gap-2">
-              MyResumeBuilder
-              <span className="text-[10px] font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-2xs">
-                2026 AI EDITION
+            <div className="flex items-center gap-2">
+              <h1 className="text-base font-black font-mono tracking-wider text-white uppercase flex items-center gap-2">
+                CYBER_BUILDER<span className="text-cyan-400 text-xs">//v2026.4</span>
+              </h1>
+              <span className="hidden sm:inline-block text-[9px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/40 shadow-[0_0_10px_rgba(0,255,102,0.2)]">
+                ● SYSTEM: ONLINE
               </span>
-            </h1>
-            <p className="text-[11px] text-slate-400 hidden sm:flex items-center gap-1.5 font-medium">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              15 ATS-Optimized 2026 Themes • 100% Free & Fast
+            </div>
+            <p className="text-[10.5px] font-mono text-slate-400 hidden sm:flex items-center gap-2 pt-0.5">
+              <Cpu className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span>OFFENSIVE_RESUME_GENERATOR</span>
+              <span className="text-slate-600">|</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span className="text-emerald-400">100% ATS_COMPLIANT</span>
             </p>
           </div>
         </div>
 
-        {/* Header Actions */}
+        {/* HUD Controls & Actions */}
         <div className="flex items-center gap-2">
+          {/* Audio SFX Toggle */}
+          <button
+            type="button"
+            onMouseEnter={() => sfx.playHover()}
+            onClick={handleToggleSound}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold rounded-xl border transition-all ${
+              sfxActive
+                ? 'bg-cyan-950/60 text-cyan-300 border-cyan-500/50 shadow-[0_0_10px_rgba(0,229,255,0.2)]'
+                : 'bg-slate-900 text-slate-500 border-slate-800'
+            }`}
+            title="Toggle Sci-Fi SFX Audio"
+          >
+            {sfxActive ? <Volume2 className="w-3.5 h-3.5 text-cyan-400" /> : <VolumeX className="w-3.5 h-3.5" />}
+            <span className="hidden sm:inline">{sfxActive ? 'SFX: ON' : 'SFX: OFF'}</span>
+          </button>
+
           {/* Reset Pre-fill Sample Data */}
           <button
             type="button"
-            onClick={onResetSampleData}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-300 bg-slate-900 hover:bg-slate-800 hover:text-white rounded-xl border border-slate-700/80 shadow-2xs transition"
+            onMouseEnter={() => sfx.playHover()}
+            onClick={() => {
+              sfx.playClick();
+              onResetSampleData();
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold text-slate-300 bg-slate-900/80 hover:bg-slate-800 hover:text-white rounded-xl border border-slate-700/80 transition"
             title="Reload realistic sample 2026 data"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
-            <span className="hidden sm:inline">2026 Sample</span>
+            <RefreshCw className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden sm:inline">SAMPLE_DATA</span>
           </button>
 
           {/* Clear Form */}
           <button
             type="button"
-            onClick={onClearData}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-400 bg-rose-950/40 hover:bg-rose-900/60 rounded-xl border border-rose-800/60 transition"
-            title="Clear all fields"
+            onMouseEnter={() => sfx.playHover()}
+            onClick={() => {
+              sfx.playPurge();
+              onClearData();
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold text-rose-400 bg-rose-950/40 hover:bg-rose-900/60 rounded-xl border border-rose-800/60 transition"
+            title="Purge all fields"
           >
             <Trash2 className="w-3.5 h-3.5 text-rose-400" />
-            <span className="hidden sm:inline">Clear</span>
+            <span className="hidden sm:inline">PURGE</span>
           </button>
 
           {/* Native Print / Save PDF */}
           <button
             type="button"
-            onClick={onPrint}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700 transition"
+            onMouseEnter={() => sfx.playHover()}
+            onClick={() => {
+              sfx.playClick();
+              onPrint();
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold text-slate-200 bg-slate-900 hover:bg-slate-800 rounded-xl border border-slate-700 transition"
             title="Print or Save as PDF using Browser Print"
           >
             <Printer className="w-3.5 h-3.5 text-slate-300" />
-            <span className="hidden md:inline">Print / PDF</span>
+            <span className="hidden md:inline">PRINT.exe</span>
           </button>
 
           {/* Direct PDF Download Button */}
           <button
             type="button"
-            onClick={onExportPdf}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-teal-500 hover:from-blue-500 hover:to-teal-400 rounded-xl shadow-lg shadow-indigo-500/25 active:scale-95 transition-all border border-white/20"
+            onMouseEnter={() => sfx.playHover()}
+            onClick={() => {
+              sfx.playSuccess();
+              onExportPdf();
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-extrabold uppercase tracking-wider text-slate-950 bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-300 hover:from-cyan-300 hover:to-emerald-300 rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] active:scale-95 transition-all border border-cyan-200"
           >
-            <FileDown className="w-4 h-4" />
-            <span>Download PDF</span>
+            <FileDown className="w-4 h-4 text-slate-950" />
+            <span>GENERATE_PDF.exe</span>
           </button>
         </div>
       </div>

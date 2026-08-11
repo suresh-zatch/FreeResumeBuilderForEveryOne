@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ResumeData, ResumeTheme } from '@/types/resume';
 import { AiFusion2026Template } from '@/components/templates/AiFusion2026Template';
 import { CyberTech2026Template } from '@/components/templates/CyberTech2026Template';
@@ -28,7 +28,8 @@ import { ElegantTemplate } from '@/components/templates/ElegantTemplate';
 import { BoldTemplate } from '@/components/templates/BoldTemplate';
 import { CompactTemplate } from '@/components/templates/CompactTemplate';
 import { ProfessionalTemplate } from '@/components/templates/ProfessionalTemplate';
-import { ZoomIn, ZoomOut, RotateCcw, Palette, Sparkles } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Palette, Shield, Monitor } from 'lucide-react';
+import { sfx } from '@/utils/audioSfx';
 
 interface Props {
   data: ResumeData;
@@ -65,7 +66,25 @@ const THEME_OPTIONS: { id: ResumeTheme; name: string }[] = [
 ];
 
 export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', onThemeChange }) => {
-  const [zoom, setZoom] = useState<number>(0.85);
+  const [zoom, setZoom] = useState<number>(0.82);
+  const [tilt, setTilt] = useState<{ rx: number; ry: number }>({ rx: 0, ry: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+
+    const ry = (x / (rect.width / 2)) * 3;  // Max 3deg tilt
+    const rx = -(y / (rect.height / 2)) * 3;
+
+    setTilt({ rx, ry });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ rx: 0, ry: 0 });
+  };
 
   const renderTemplate = () => {
     switch (data.theme) {
@@ -125,26 +144,29 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-900/5 backdrop-blur rounded-2xl border border-gray-200/80 shadow-inner overflow-hidden">
-      {/* Top Preview Controls & Theme Selector Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-gray-100 border-b border-gray-200 text-xs text-gray-600">
+    <div className="flex flex-col h-full bg-slate-950/80 backdrop-blur-2xl rounded-2xl border border-cyan-500/30 shadow-[0_0_35px_rgba(0,229,255,0.15)] overflow-hidden">
+      {/* Hologram Controls Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-slate-900/90 border-b border-cyan-500/30 text-xs font-mono">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span className="font-semibold text-gray-700">Live Preview</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+          <span className="font-bold text-cyan-300 tracking-wider">HOLOGRAM_PREVIEW</span>
+          <span className="text-[10px] text-slate-500 hidden sm:inline">(A4 3D CANVAS)</span>
         </div>
 
         {/* Instant Theme Dropdown Selector */}
         {onThemeChange && (
-          <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg px-2 py-1 shadow-2xs">
-            <Palette className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-            <span className="text-[11px] font-bold text-gray-700 shrink-0 hidden sm:inline">Theme:</span>
+          <div className="flex items-center gap-1.5 bg-slate-950 border border-cyan-400/50 rounded-xl px-2.5 py-1 shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+            <Palette className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
             <select
               value={data.theme}
-              onChange={(e) => onThemeChange(e.target.value as ResumeTheme)}
-              className="text-xs font-semibold text-indigo-900 bg-transparent outline-none cursor-pointer py-0.5"
+              onChange={(e) => {
+                sfx.playClick();
+                onThemeChange(e.target.value as ResumeTheme);
+              }}
+              className="text-xs font-mono font-bold text-cyan-300 bg-transparent outline-none cursor-pointer py-0.5"
             >
               {THEME_OPTIONS.map((t) => (
-                <option key={t.id} value={t.id}>
+                <option key={t.id} value={t.id} className="bg-slate-900 text-white font-mono">
                   {t.name}
                 </option>
               ))}
@@ -153,30 +175,42 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
         )}
 
         {/* Zoom Controls */}
-        <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg p-0.5 shadow-2xs">
+        <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl p-0.5">
           <button
             type="button"
-            onClick={() => setZoom((z) => Math.max(0.5, z - 0.05))}
-            className="p-1 hover:bg-gray-100 rounded text-gray-600 transition"
+            onMouseEnter={() => sfx.playHover()}
+            onClick={() => {
+              sfx.playClick();
+              setZoom((z) => Math.max(0.5, z - 0.05));
+            }}
+            className="p-1 hover:bg-slate-800 rounded text-cyan-400 transition"
             title="Zoom Out"
           >
             <ZoomOut className="w-3.5 h-3.5" />
           </button>
-          <span className="px-1.5 font-mono text-[11px] text-gray-700 min-w-[40px] text-center font-medium">
+          <span className="px-1 font-mono text-[11px] text-cyan-300 min-w-[36px] text-center font-bold">
             {Math.round(zoom * 100)}%
           </span>
           <button
             type="button"
-            onClick={() => setZoom((z) => Math.min(1.2, z + 0.05))}
-            className="p-1 hover:bg-gray-100 rounded text-gray-600 transition"
+            onMouseEnter={() => sfx.playHover()}
+            onClick={() => {
+              sfx.playClick();
+              setZoom((z) => Math.min(1.2, z + 0.05));
+            }}
+            className="p-1 hover:bg-slate-800 rounded text-cyan-400 transition"
             title="Zoom In"
           >
             <ZoomIn className="w-3.5 h-3.5" />
           </button>
           <button
             type="button"
-            onClick={() => setZoom(0.85)}
-            className="p-1 hover:bg-gray-100 rounded text-gray-600 transition border-l border-gray-200 pl-1.5"
+            onMouseEnter={() => sfx.playHover()}
+            onClick={() => {
+              sfx.playClick();
+              setZoom(0.82);
+            }}
+            className="p-1 hover:bg-slate-800 rounded text-slate-400 transition border-l border-slate-800 pl-1.5"
             title="Reset Zoom"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -184,16 +218,25 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
         </div>
       </div>
 
-      {/* Canvas Viewport */}
-      <div className="flex-1 overflow-auto p-4 flex justify-center items-start bg-gray-200/60">
+      {/* 3D Holographic Viewport Canvas */}
+      <div
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="flex-1 overflow-auto p-4 flex justify-center items-start bg-slate-950/60 perspective-1000"
+        style={{ perspective: '1000px' }}
+      >
         <div
-          className="transition-transform origin-top duration-150"
-          style={{ transform: `scale(${zoom})` }}
+          className="transition-transform duration-100 ease-out origin-top"
+          style={{
+            transform: `scale(${zoom}) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+            transformStyle: 'preserve-3d',
+          }}
         >
           {/* Target capturing element for PDF Export */}
           <div
             id={id}
-            className="w-[210mm] min-h-[297mm] bg-white rounded-lg shadow-xl overflow-hidden border border-gray-300"
+            className="w-[210mm] min-h-[297mm] bg-white rounded-lg shadow-[0_0_30px_rgba(0,229,255,0.2)] overflow-hidden border border-cyan-400/40 relative"
           >
             {renderTemplate()}
           </div>

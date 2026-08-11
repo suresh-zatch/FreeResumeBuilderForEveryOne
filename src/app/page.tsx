@@ -5,6 +5,7 @@ import { ResumeData } from '@/types/resume';
 import { initialResumeData } from '@/data/initialData';
 import { exportResumeToPdf } from '@/utils/exportPdf';
 import { Header } from '@/components/Header';
+import { CyberParticleCanvas } from '@/components/CyberParticleCanvas';
 import { PersonalInfoForm } from '@/components/forms/PersonalInfoForm';
 import { ExperienceForm } from '@/components/forms/ExperienceForm';
 import { EducationForm } from '@/components/forms/EducationForm';
@@ -14,7 +15,8 @@ import { SkillsForm } from '@/components/forms/SkillsForm';
 import { ThemeSelector } from '@/components/forms/ThemeSelector';
 import { AiAssistantPanel } from '@/components/forms/AiAssistantPanel';
 import { ResumePreview } from '@/components/ResumePreview';
-import { User, Briefcase, GraduationCap, Rocket, Award, Code, Palette, Sparkles } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Rocket, Award, Code, Palette, Sparkles, Terminal } from 'lucide-react';
+import { sfx } from '@/utils/audioSfx';
 
 type ActiveTab =
   | 'personal'
@@ -102,18 +104,25 @@ export default function Home() {
   };
 
   const TABS = [
-    { id: 'personal', label: 'Personal Info', icon: User },
-    { id: 'experience', label: 'Experience', icon: Briefcase },
-    { id: 'education', label: 'Education', icon: GraduationCap },
-    { id: 'projects', label: 'Projects', icon: Rocket },
-    { id: 'certifications', label: 'Certifications', icon: Award },
-    { id: 'skills', label: 'Skills', icon: Code },
-    { id: 'theme', label: '2026 Templates', icon: Palette },
-    { id: 'ai_assistant', label: 'AI & ATS Score', icon: Sparkles, badge: 'NEW' },
+    { id: 'personal', label: 'MOD_01: IDENTITY', icon: User },
+    { id: 'experience', label: 'MOD_02: EXPERIENCE', icon: Briefcase },
+    { id: 'education', label: 'MOD_03: EDUCATION', icon: GraduationCap },
+    { id: 'projects', label: 'MOD_04: PROJECTS', icon: Rocket },
+    { id: 'certifications', label: 'MOD_05: CERTS', icon: Award },
+    { id: 'skills', label: 'MOD_06: SKILLS', icon: Code },
+    { id: 'theme', label: 'MOD_07: THEMES', icon: Palette },
+    { id: 'ai_assistant', label: 'MOD_08: AI_ATS', icon: Sparkles, badge: 'AI' },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#05070b] text-slate-100 flex flex-col font-sans relative selection:bg-cyan-500 selection:text-black">
+      {/* 3D Particle Canvas Mesh Background */}
+      <CyberParticleCanvas />
+
+      {/* CRT Scanline FX Overlay */}
+      <div className="scanlines-overlay" />
+
+      {/* Top Cyber Command Center HUD Bar */}
       <Header
         onExportPdf={handleExportPdf}
         onPrint={handlePrint}
@@ -121,29 +130,33 @@ export default function Home() {
         onClearData={handleClearData}
       />
 
-      {/* Main Split-Screen Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Forms & Controls (5 Cols) */}
-        <div className="lg:col-span-6 xl:col-span-5 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-[720px]">
-          {/* Tab Bar */}
-          <div className="flex border-b border-slate-200 bg-slate-100/70 overflow-x-auto no-scrollbar">
+      {/* Main Split-Screen Command Workspace */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start z-10 relative">
+        {/* Left Column: Form Command Modules (5 Cols) */}
+        <div className="lg:col-span-6 xl:col-span-5 cyber-glass rounded-2xl border border-cyan-500/30 overflow-hidden flex flex-col min-h-[730px] shadow-[0_0_30px_rgba(0,229,255,0.08)]">
+          {/* Module Tab Navigation */}
+          <div className="flex border-b border-cyan-500/20 bg-slate-950/80 overflow-x-auto no-scrollbar">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as ActiveTab)}
-                  className={`flex items-center gap-1.5 px-3.5 py-3 text-xs font-semibold whitespace-nowrap transition border-b-2 outline-none ${
+                  onMouseEnter={() => sfx.playHover()}
+                  onClick={() => {
+                    sfx.playClick();
+                    setActiveTab(tab.id as ActiveTab);
+                  }}
+                  className={`flex items-center gap-1.5 px-3 py-3 text-xs font-mono font-bold whitespace-nowrap transition border-b-2 outline-none ${
                     isActive
-                      ? 'border-blue-600 text-blue-600 bg-white shadow-2xs'
-                      : 'border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
+                      ? 'border-cyan-400 text-cyan-300 bg-slate-900 shadow-[0_0_15px_rgba(0,229,255,0.2)]'
+                      : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
                   <span>{tab.label}</span>
                   {tab.badge && (
-                    <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-indigo-600 text-white">
+                    <span className="text-[9px] font-mono font-black uppercase tracking-wider px-1 rounded bg-emerald-500 text-black">
                       {tab.badge}
                     </span>
                   )}
@@ -152,7 +165,7 @@ export default function Home() {
             })}
           </div>
 
-          {/* Form Content Area */}
+          {/* Module Form Content Area */}
           <div className="p-5 flex-1 overflow-y-auto max-h-[calc(100vh-180px)]">
             {activeTab === 'personal' && (
               <PersonalInfoForm
@@ -214,7 +227,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Column: Live Resume Preview (7 Cols) */}
+        {/* Right Column: Floating 3D Holographic Resume Preview (7 Cols) */}
         <div className="lg:col-span-6 xl:col-span-7 sticky top-20 h-[calc(100vh-100px)] hidden lg:block">
           <ResumePreview
             data={resumeData}
@@ -222,10 +235,12 @@ export default function Home() {
           />
         </div>
 
-        {/* Mobile Preview Fallback */}
-        <div className="block lg:hidden col-span-1 border-t border-slate-200 pt-6">
-          <h3 className="text-sm font-bold text-slate-800 mb-3">Live Resume Preview</h3>
-          <div className="h-[600px] overflow-hidden rounded-xl border border-slate-200">
+        {/* Mobile Hologram Fallback */}
+        <div className="block lg:hidden col-span-1 border-t border-cyan-500/20 pt-6">
+          <h3 className="text-xs font-mono font-bold text-cyan-400 uppercase mb-3 flex items-center gap-1.5">
+            <Terminal className="w-4 h-4" /> Live Holographic Canvas
+          </h3>
+          <div className="h-[600px] overflow-hidden rounded-xl border border-cyan-500/30">
             <ResumePreview
               data={resumeData}
               onThemeChange={(theme) => setResumeData({ ...resumeData, theme })}
@@ -236,10 +251,10 @@ export default function Home() {
 
       {/* Export Overlay Spinner */}
       {isExporting && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center text-white">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 shadow-2xl flex flex-col items-center gap-3">
-            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm font-semibold">Generating your high-res 2026 A4 PDF...</p>
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center text-white">
+          <div className="bg-slate-900 border border-cyan-400/50 rounded-2xl p-6 shadow-[0_0_40px_rgba(0,229,255,0.4)] flex flex-col items-center gap-3">
+            <div className="w-10 h-10 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm font-mono font-bold text-cyan-300">COMPILING HIGH-RES 2026 PDF.exe...</p>
           </div>
         </div>
       )}

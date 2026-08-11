@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { ExperienceItem } from '@/types/resume';
-import { Briefcase, Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Briefcase, Plus, Trash2, ChevronUp, ChevronDown, Terminal } from 'lucide-react';
+import { sfx } from '@/utils/audioSfx';
 
 interface Props {
   experience: ExperienceItem[];
@@ -17,6 +18,7 @@ export const ExperienceForm: React.FC<Props> = ({ experience, onChange }) => {
   };
 
   const handleAddExperience = () => {
+    sfx.playClick();
     const newItem: ExperienceItem = {
       id: `exp-${Date.now()}`,
       company: '',
@@ -31,6 +33,7 @@ export const ExperienceForm: React.FC<Props> = ({ experience, onChange }) => {
   };
 
   const handleRemove = (index: number) => {
+    sfx.playPurge();
     const updated = experience.filter((_, i) => i !== index);
     onChange(updated);
   };
@@ -38,6 +41,7 @@ export const ExperienceForm: React.FC<Props> = ({ experience, onChange }) => {
   const handleMove = (index: number, direction: 'up' | 'down') => {
     if (direction === 'up' && index === 0) return;
     if (direction === 'down' && index === experience.length - 1) return;
+    sfx.playHover();
 
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     const updated = [...experience];
@@ -48,33 +52,34 @@ export const ExperienceForm: React.FC<Props> = ({ experience, onChange }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+    <div className="space-y-4 font-mono">
+      <div className="flex items-center justify-between border-b border-cyan-500/20 pb-3">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <Briefcase className="w-5 h-5 text-blue-600" />
-            Work Experience
+          <h2 className="text-base font-bold text-cyan-300 flex items-center gap-2 uppercase tracking-wider">
+            <Terminal className="w-5 h-5 text-cyan-400" />
+            // MODULE 02: EXPERIENCE_LOGS
           </h2>
-          <p className="text-xs text-gray-500">Detail your past employment, responsibilities, and achievements.</p>
+          <p className="text-[11px] text-slate-400">Detail technical roles, leadership impact, and quantifiable accomplishments.</p>
         </div>
         <button
           type="button"
+          onMouseEnter={() => sfx.playHover()}
           onClick={handleAddExperience}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 rounded-lg shadow-[0_0_10px_rgba(0,229,255,0.3)] transition"
         >
-          <Plus className="w-4 h-4" /> Add Experience
+          <Plus className="w-4 h-4" /> ADD_EXPERIENCE
         </button>
       </div>
 
       {experience.length === 0 ? (
-        <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50">
-          <p className="text-sm text-gray-500 mb-2">No work experience added yet.</p>
+        <div className="text-center py-8 border border-dashed border-cyan-500/30 rounded-xl bg-slate-950/60">
+          <p className="text-xs text-slate-400 mb-2">// NO_EXPERIENCE_LOGS_DETECTED</p>
           <button
             type="button"
             onClick={handleAddExperience}
-            className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 hover:underline"
           >
-            <Plus className="w-3.5 h-3.5" /> Add your first work experience
+            <Plus className="w-3.5 h-3.5" /> Initialize first work log entry
           </button>
         </div>
       ) : (
@@ -82,19 +87,18 @@ export const ExperienceForm: React.FC<Props> = ({ experience, onChange }) => {
           {experience.map((item, index) => (
             <div
               key={item.id}
-              className="p-4 bg-white border border-gray-200 rounded-xl shadow-sm space-y-3 relative group"
+              className="p-4 bg-slate-950/90 border border-cyan-500/30 rounded-xl shadow-lg space-y-3 relative group hover:border-cyan-400 transition"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  Experience #{index + 1}
+                <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-950 px-2 py-0.5 rounded border border-cyan-500/30">
+                  LOG_RECORD #{index + 1}
                 </span>
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
                     disabled={index === 0}
                     onClick={() => handleMove(index, 'up')}
-                    className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30 transition"
-                    title="Move up"
+                    className="p-1 text-slate-500 hover:text-cyan-400 disabled:opacity-20 transition"
                   >
                     <ChevronUp className="w-4 h-4" />
                   </button>
@@ -102,16 +106,14 @@ export const ExperienceForm: React.FC<Props> = ({ experience, onChange }) => {
                     type="button"
                     disabled={index === experience.length - 1}
                     onClick={() => handleMove(index, 'down')}
-                    className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30 transition"
-                    title="Move down"
+                    className="p-1 text-slate-500 hover:text-cyan-400 disabled:opacity-20 transition"
                   >
                     <ChevronDown className="w-4 h-4" />
                   </button>
                   <button
                     type="button"
                     onClick={() => handleRemove(index)}
-                    className="p-1 text-red-500 hover:text-red-700 transition"
-                    title="Delete experience"
+                    className="p-1 text-rose-400 hover:text-rose-300 transition"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -120,59 +122,59 @@ export const ExperienceForm: React.FC<Props> = ({ experience, onChange }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Company Name</label>
+                  <label className="block text-xs font-bold text-cyan-300 mb-1">$ company_name</label>
                   <input
                     type="text"
                     value={item.company}
                     onChange={(e) => handleItemChange(index, 'company', e.target.value)}
-                    placeholder="e.g. Google"
-                    className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    placeholder="e.g. TechNova AI"
+                    className="w-full px-3 py-1.5 text-xs bg-slate-900 text-white border border-slate-800 rounded-lg focus:border-cyan-400 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Position / Job Title</label>
+                  <label className="block text-xs font-bold text-cyan-300 mb-1">$ role_position</label>
                   <input
                     type="text"
                     value={item.position}
                     onChange={(e) => handleItemChange(index, 'position', e.target.value)}
-                    placeholder="e.g. Senior Software Engineer"
-                    className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    placeholder="e.g. Lead Engineer"
+                    className="w-full px-3 py-1.5 text-xs bg-slate-900 text-white border border-slate-800 rounded-lg focus:border-cyan-400 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Location</label>
+                  <label className="block text-xs font-bold text-cyan-300 mb-1">$ location</label>
                   <input
                     type="text"
                     value={item.location}
                     onChange={(e) => handleItemChange(index, 'location', e.target.value)}
-                    placeholder="e.g. Mountain View, CA"
-                    className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    placeholder="e.g. San Francisco, CA"
+                    className="w-full px-3 py-1.5 text-xs bg-slate-900 text-white border border-slate-800 rounded-lg focus:border-cyan-400 outline-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Start Date</label>
+                    <label className="block text-xs font-bold text-cyan-300 mb-1">$ start_date</label>
                     <input
                       type="text"
                       value={item.startDate}
                       onChange={(e) => handleItemChange(index, 'startDate', e.target.value)}
-                      placeholder="e.g. 2021-01 or Jan 2021"
-                      className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                      placeholder="e.g. 2022-03"
+                      className="w-full px-3 py-1.5 text-xs bg-slate-900 text-white border border-slate-800 rounded-lg focus:border-cyan-400 outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">End Date</label>
+                    <label className="block text-xs font-bold text-cyan-300 mb-1">$ end_date</label>
                     <input
                       type="text"
                       disabled={item.current}
                       value={item.current ? 'Present' : item.endDate}
                       onChange={(e) => handleItemChange(index, 'endDate', e.target.value)}
-                      placeholder="e.g. 2023-05 or Present"
-                      className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-gray-100 disabled:text-gray-500"
+                      placeholder="e.g. Present"
+                      className="w-full px-3 py-1.5 text-xs bg-slate-900 text-white border border-slate-800 rounded-lg focus:border-cyan-400 outline-none disabled:bg-slate-900/50 disabled:text-slate-500"
                     />
                   </div>
                 </div>
@@ -187,23 +189,23 @@ export const ExperienceForm: React.FC<Props> = ({ experience, onChange }) => {
                     handleItemChange(index, 'current', e.target.checked);
                     if (e.target.checked) handleItemChange(index, 'endDate', 'Present');
                   }}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-cyan-400 focus:ring-cyan-400 bg-slate-900 border-slate-700"
                 />
-                <label htmlFor={`current-${item.id}`} className="text-xs text-gray-700">
-                  I currently work here
+                <label htmlFor={`current-${item.id}`} className="text-xs text-slate-300">
+                  Currently active in this position
                 </label>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Description & Key Accomplishments (bullet points)
+                <label className="block text-xs font-bold text-cyan-300 mb-1">
+                  $ responsibilities_metrics_bullet_points
                 </label>
                 <textarea
                   rows={3}
                   value={item.description}
                   onChange={(e) => handleItemChange(index, 'description', e.target.value)}
-                  placeholder="• Developed features using React and TypeScript...&#10;• Reduced infrastructure latency by 30%..."
-                  className="w-full p-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y"
+                  placeholder="• Architected microservices migration using Next.js 16...&#10;• Reduced infrastructure latency by 45%..."
+                  className="w-full p-2.5 text-xs bg-slate-900 text-white border border-slate-800 rounded-lg focus:border-cyan-400 outline-none resize-y"
                 />
               </div>
             </div>
