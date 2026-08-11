@@ -1,4 +1,20 @@
-export type ResumeTheme = 'modern' | 'minimal' | 'classic' | 'executive' | 'creative' | 'technical' | 'elegant' | 'bold' | 'compact' | 'professional';
+export type ResumeTheme =
+  | 'ai_fusion_2026'
+  | 'cyber_tech_2026'
+  | 'executive_prime_2026'
+  | 'glass_modern_2026'
+  | 'creative_portfolio_2026'
+  | 'minimal_horizon_2026'
+  | 'modern'
+  | 'minimal'
+  | 'classic'
+  | 'executive'
+  | 'creative'
+  | 'technical'
+  | 'elegant'
+  | 'bold'
+  | 'compact'
+  | 'professional';
 
 export interface PersonalInfo {
   fullName: string;
@@ -42,6 +58,23 @@ export interface SkillCategory {
   skills: string[];
 }
 
+export interface ProjectItem {
+  id: string;
+  title: string;
+  description: string;
+  technologies: string[];
+  link?: string;
+  githubUrl?: string;
+}
+
+export interface CertificationItem {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+  url?: string;
+}
+
 export interface CustomSection {
   id: string;
   title: string;
@@ -53,6 +86,9 @@ export interface ResumeData {
   experience: ExperienceItem[];
   education: EducationItem[];
   skillCategories: SkillCategory[];
+  projects?: ProjectItem[];
+  certifications?: CertificationItem[];
+  customSections?: CustomSection[];
   theme: ResumeTheme;
   accentColor: string;
 }

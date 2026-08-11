@@ -8,12 +8,23 @@ import { Header } from '@/components/Header';
 import { PersonalInfoForm } from '@/components/forms/PersonalInfoForm';
 import { ExperienceForm } from '@/components/forms/ExperienceForm';
 import { EducationForm } from '@/components/forms/EducationForm';
+import { ProjectsForm } from '@/components/forms/ProjectsForm';
+import { CertificationsForm } from '@/components/forms/CertificationsForm';
 import { SkillsForm } from '@/components/forms/SkillsForm';
 import { ThemeSelector } from '@/components/forms/ThemeSelector';
+import { AiAssistantPanel } from '@/components/forms/AiAssistantPanel';
 import { ResumePreview } from '@/components/ResumePreview';
-import { User, Briefcase, GraduationCap, Code, Palette } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Rocket, Award, Code, Palette, Sparkles } from 'lucide-react';
 
-type ActiveTab = 'personal' | 'experience' | 'education' | 'skills' | 'theme';
+type ActiveTab =
+  | 'personal'
+  | 'experience'
+  | 'education'
+  | 'projects'
+  | 'certifications'
+  | 'skills'
+  | 'theme'
+  | 'ai_assistant';
 
 export default function Home() {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
@@ -26,7 +37,7 @@ export default function Home() {
       const saved = localStorage.getItem('resume_builder_data');
       if (saved) {
         const parsed = JSON.parse(saved);
-        setResumeData(parsed);
+        setResumeData({ ...initialResumeData, ...parsed });
       }
     } catch (err) {
       console.error('Failed to parse saved resume data:', err);
@@ -59,7 +70,7 @@ export default function Home() {
   };
 
   const handleResetSampleData = () => {
-    if (window.confirm('Reset all fields to sample data?')) {
+    if (window.confirm('Reset all fields to sample 2026 data?')) {
       setResumeData(initialResumeData);
     }
   };
@@ -77,11 +88,14 @@ export default function Home() {
           linkedin: '',
           github: '',
           summary: '',
+          photoUrl: '',
         },
         experience: [],
         education: [],
         skillCategories: [],
-        theme: 'modern',
+        projects: [],
+        certifications: [],
+        theme: 'ai_fusion_2026',
         accentColor: '#2563eb',
       });
     }
@@ -91,12 +105,15 @@ export default function Home() {
     { id: 'personal', label: 'Personal Info', icon: User },
     { id: 'experience', label: 'Experience', icon: Briefcase },
     { id: 'education', label: 'Education', icon: GraduationCap },
+    { id: 'projects', label: 'Projects', icon: Rocket },
+    { id: 'certifications', label: 'Certifications', icon: Award },
     { id: 'skills', label: 'Skills', icon: Code },
-    { id: 'theme', label: 'Theme & Style', icon: Palette },
+    { id: 'theme', label: '2026 Templates', icon: Palette },
+    { id: 'ai_assistant', label: 'AI & ATS Score', icon: Sparkles, badge: 'NEW' },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
       <Header
         onExportPdf={handleExportPdf}
         onPrint={handlePrint}
@@ -107,9 +124,9 @@ export default function Home() {
       {/* Main Split-Screen Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Forms & Controls (5 Cols) */}
-        <div className="lg:col-span-6 xl:col-span-5 bg-white border border-gray-200/80 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-[700px]">
+        <div className="lg:col-span-6 xl:col-span-5 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-[720px]">
           {/* Tab Bar */}
-          <div className="flex border-b border-gray-200 bg-gray-50/80 overflow-x-auto no-scrollbar">
+          <div className="flex border-b border-slate-200 bg-slate-100/70 overflow-x-auto no-scrollbar">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -117,14 +134,19 @@ export default function Home() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as ActiveTab)}
-                  className={`flex items-center gap-1.5 px-4 py-3 text-xs font-semibold whitespace-nowrap transition border-b-2 outline-none ${
+                  className={`flex items-center gap-1.5 px-3.5 py-3 text-xs font-semibold whitespace-nowrap transition border-b-2 outline-none ${
                     isActive
                       ? 'border-blue-600 text-blue-600 bg-white shadow-2xs'
-                      : 'border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-100/50'
+                      : 'border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
                   <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-indigo-600 text-white">
+                      {tab.badge}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -153,6 +175,20 @@ export default function Home() {
               />
             )}
 
+            {activeTab === 'projects' && (
+              <ProjectsForm
+                projects={resumeData.projects || []}
+                onChange={(updated) => setResumeData({ ...resumeData, projects: updated })}
+              />
+            )}
+
+            {activeTab === 'certifications' && (
+              <CertificationsForm
+                certifications={resumeData.certifications || []}
+                onChange={(updated) => setResumeData({ ...resumeData, certifications: updated })}
+              />
+            )}
+
             {activeTab === 'skills' && (
               <SkillsForm
                 skillCategories={resumeData.skillCategories}
@@ -168,6 +204,13 @@ export default function Home() {
                 onColorChange={(accentColor) => setResumeData({ ...resumeData, accentColor })}
               />
             )}
+
+            {activeTab === 'ai_assistant' && (
+              <AiAssistantPanel
+                data={resumeData}
+                onApplyPreset={(presetData) => setResumeData({ ...resumeData, ...presetData })}
+              />
+            )}
           </div>
         </div>
 
@@ -176,10 +219,10 @@ export default function Home() {
           <ResumePreview data={resumeData} />
         </div>
 
-        {/* Mobile Preview Fallback (Visible only on mobile/tablet screens below lg) */}
-        <div className="block lg:hidden col-span-1 border-t border-gray-200 pt-6">
-          <h3 className="text-sm font-bold text-gray-800 mb-3">Live Resume Preview</h3>
-          <div className="h-[600px] overflow-hidden rounded-xl border border-gray-200">
+        {/* Mobile Preview Fallback */}
+        <div className="block lg:hidden col-span-1 border-t border-slate-200 pt-6">
+          <h3 className="text-sm font-bold text-slate-800 mb-3">Live Resume Preview</h3>
+          <div className="h-[600px] overflow-hidden rounded-xl border border-slate-200">
             <ResumePreview data={resumeData} />
           </div>
         </div>
@@ -187,10 +230,10 @@ export default function Home() {
 
       {/* Export Overlay Spinner */}
       {isExporting && (
-        <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-xs z-50 flex items-center justify-center text-white">
-          <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 shadow-2xl flex flex-col items-center gap-3">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center text-white">
+          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 shadow-2xl flex flex-col items-center gap-3">
             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm font-semibold">Generating your high-res A4 PDF...</p>
+            <p className="text-sm font-semibold">Generating your high-res 2026 A4 PDF...</p>
           </div>
         </div>
       )}

@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { PersonalInfo } from '@/types/resume';
-import { User, Mail, Phone, MapPin, Globe, FileText, Image } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Globe, FileText, Image as ImageIcon, Upload, Trash2 } from 'lucide-react';
 
 const LinkedinIcon = () => (
   <svg className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="currentColor" viewBox="0 0 24 24">
@@ -22,8 +22,29 @@ interface Props {
 }
 
 export const PersonalInfoForm: React.FC<Props> = ({ personalInfo, onChange }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleChange = (field: keyof PersonalInfo, value: string) => {
     onChange({ ...personalInfo, [field]: value });
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size exceeds 5MB. Please select a smaller photo.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      if (dataUrl) {
+        handleChange('photoUrl', dataUrl);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -33,12 +54,53 @@ export const PersonalInfoForm: React.FC<Props> = ({ personalInfo, onChange }) =>
           <User className="w-5 h-5 text-blue-600" />
           Personal Information
         </h2>
-        <p className="text-xs text-gray-500">Enter your contact details and professional summary.</p>
+        <p className="text-xs text-gray-500">Enter your contact details, photo, and professional summary.</p>
+      </div>
+
+      {/* Profile Photo Uploader */}
+      <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl flex flex-wrap items-center gap-4">
+        <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md bg-gray-200 shrink-0 flex items-center justify-center">
+          {personalInfo.photoUrl ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={personalInfo.photoUrl} alt="Avatar" className="w-full h-full object-cover" />
+          ) : (
+            <User className="w-8 h-8 text-gray-400" />
+          )}
+        </div>
+        <div className="flex-1 space-y-1.5 min-w-[200px]">
+          <label className="block text-xs font-semibold text-gray-800">Profile Photo</label>
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition shadow-2xs"
+            >
+              <Upload className="w-3.5 h-3.5" /> Upload Image
+            </button>
+            {personalInfo.photoUrl && (
+              <button
+                type="button"
+                onClick={() => handleChange('photoUrl', '')}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition"
+              >
+                <Trash2 className="w-3.5 h-3.5" /> Remove
+              </button>
+            )}
+          </div>
+          <p className="text-[10.5px] text-gray-500">Supported formats: JPG, PNG, WebP (Max 5MB)</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Full Name *</label>
           <div className="relative">
             <User className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
             <input
@@ -52,18 +114,18 @@ export const PersonalInfoForm: React.FC<Props> = ({ personalInfo, onChange }) =>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Job Title</label>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Job Title *</label>
           <input
             type="text"
             value={personalInfo.jobTitle}
             onChange={(e) => handleChange('jobTitle', e.target.value)}
-            placeholder="e.g. Senior Full-Stack Engineer"
+            placeholder="e.g. Senior AI & Full-Stack Engineer"
             className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Email Address</label>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Email Address *</label>
           <div className="relative">
             <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
             <input
@@ -148,17 +210,17 @@ export const PersonalInfoForm: React.FC<Props> = ({ personalInfo, onChange }) =>
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">Profile Photo URL (Optional)</label>
-        <div className="relative">
-          <Image className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
-          <input
-            type="text"
-            value={personalInfo.photoUrl || ''}
-            onChange={(e) => handleChange('photoUrl', e.target.value)}
-            placeholder="e.g. https://images.unsplash.com/photo-..."
-            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-          />
-        </div>
+        <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1">
+          <ImageIcon className="w-3.5 h-3.5 text-gray-500" />
+          Or Image URL Direct Link (Optional)
+        </label>
+        <input
+          type="text"
+          value={personalInfo.photoUrl || ''}
+          onChange={(e) => handleChange('photoUrl', e.target.value)}
+          placeholder="e.g. https://images.unsplash.com/photo-..."
+          className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+        />
       </div>
 
       <div>

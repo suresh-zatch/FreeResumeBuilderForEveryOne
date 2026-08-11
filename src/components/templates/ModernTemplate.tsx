@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const ModernTemplate: React.FC<Props> = ({ data }) => {
-  const { personalInfo, experience, education, skillCategories, accentColor } = data;
+  const { personalInfo, experience, education, skillCategories, projects, certifications, accentColor } = data;
 
   return (
     <div className="w-full bg-white text-gray-800 font-sans text-xs leading-relaxed p-8 min-h-[1050px] shadow-sm">
@@ -34,6 +34,7 @@ export const ModernTemplate: React.FC<Props> = ({ data }) => {
         </div>
 
         {personalInfo.photoUrl && (
+          /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={personalInfo.photoUrl}
             alt={personalInfo.fullName}
@@ -146,6 +147,26 @@ export const ModernTemplate: React.FC<Props> = ({ data }) => {
               </div>
             </div>
           )}
+
+          {/* Certifications Sidebar */}
+          {certifications && certifications.length > 0 && (
+            <div>
+              <h3
+                className="text-xs font-bold uppercase tracking-wider mb-2.5 pb-1 border-b"
+                style={{ color: accentColor, borderColor: accentColor }}
+              >
+                Certifications
+              </h3>
+              <div className="space-y-2 text-[10.5px]">
+                {certifications.map((c) => (
+                  <div key={c.id}>
+                    <p className="font-bold text-gray-900">{c.name}</p>
+                    <p className="text-gray-500 text-[10px]">{c.issuer} ({c.date})</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Main Content */}
@@ -187,6 +208,35 @@ export const ModernTemplate: React.FC<Props> = ({ data }) => {
                     {exp.description && (
                       <div className="text-gray-700 text-[10.5px] whitespace-pre-line leading-relaxed">
                         {exp.description}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Projects */}
+          {projects && projects.length > 0 && (
+            <div>
+              <h3
+                className="text-xs font-bold uppercase tracking-wider mb-3 pb-1 border-b"
+                style={{ color: accentColor, borderColor: accentColor }}
+              >
+                Featured Projects
+              </h3>
+              <div className="space-y-3">
+                {projects.map((proj) => (
+                  <div key={proj.id} className="p-3 bg-gray-50 border border-gray-100 rounded-lg space-y-1">
+                    <h4 className="font-bold text-gray-900 text-xs">{proj.title}</h4>
+                    {proj.description && <p className="text-gray-600 text-[10.5px]">{proj.description}</p>}
+                    {proj.technologies && proj.technologies.length > 0 && (
+                      <div className="flex flex-wrap gap-1 pt-1">
+                        {proj.technologies.map((tech, idx) => (
+                          <span key={idx} className="px-2 py-0.5 bg-white text-gray-700 text-[9.5px] border border-gray-200 rounded font-medium">
+                            {tech}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>

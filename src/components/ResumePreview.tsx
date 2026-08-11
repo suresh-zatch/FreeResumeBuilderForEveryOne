@@ -2,6 +2,13 @@
 
 import React, { useState } from 'react';
 import { ResumeData } from '@/types/resume';
+import { AiFusion2026Template } from '@/components/templates/AiFusion2026Template';
+import { CyberTech2026Template } from '@/components/templates/CyberTech2026Template';
+import { ExecutivePrime2026Template } from '@/components/templates/ExecutivePrime2026Template';
+import { GlassModern2026Template } from '@/components/templates/GlassModern2026Template';
+import { CreativePortfolio2026Template } from '@/components/templates/CreativePortfolio2026Template';
+import { MinimalHorizon2026Template } from '@/components/templates/MinimalHorizon2026Template';
+
 import { ModernTemplate } from '@/components/templates/ModernTemplate';
 import { MinimalTemplate } from '@/components/templates/MinimalTemplate';
 import { ClassicTemplate } from '@/components/templates/ClassicTemplate';
@@ -24,6 +31,19 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview' }) 
 
   const renderTemplate = () => {
     switch (data.theme) {
+      case 'ai_fusion_2026':
+        return <AiFusion2026Template data={data} />;
+      case 'cyber_tech_2026':
+        return <CyberTech2026Template data={data} />;
+      case 'executive_prime_2026':
+        return <ExecutivePrime2026Template data={data} />;
+      case 'glass_modern_2026':
+        return <GlassModern2026Template data={data} />;
+      case 'creative_portfolio_2026':
+        return <CreativePortfolio2026Template data={data} />;
+      case 'minimal_horizon_2026':
+        return <MinimalHorizon2026Template data={data} />;
+
       case 'minimal':
         return <MinimalTemplate data={data} />;
       case 'classic':
