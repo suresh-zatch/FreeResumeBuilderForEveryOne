@@ -525,7 +525,7 @@ export const AiAssistantPanel: React.FC<Props> = ({ data, onApplyPreset }) => {
         )}
 
         {/* Role cards — scrollable container */}
-        <div className="grid grid-cols-1 gap-2 max-h-[360px] overflow-y-auto pr-1">
+        <div className="grid grid-cols-1 gap-2 pr-1" style={{ maxHeight: '380px', overflowY: 'auto' }}>
           {filtered.map((preset, i) => {
             const globalIdx = ROLE_PRESETS.indexOf(preset);
             const isApplied = appliedIdx === globalIdx;
