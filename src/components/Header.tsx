@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileDown, Printer, RefreshCw, Trash2, ShieldCheck, Terminal, Volume2, VolumeX, Cpu } from 'lucide-react';
+import { FileDown, Printer, RefreshCw, Trash2, ShieldCheck, Terminal, Volume2, VolumeX, Cpu, Loader2 } from 'lucide-react';
 import { sfx } from '@/utils/audioSfx';
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
   onPrint: () => void;
   onResetSampleData: () => void;
   onClearData: () => void;
+  isExporting?: boolean;
 }
 
 export const Header: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const Header: React.FC<Props> = ({
   onPrint,
   onResetSampleData,
   onClearData,
+  isExporting = false,
 }) => {
   const [sfxActive, setSfxActive] = useState<boolean>(true);
 
@@ -117,15 +119,26 @@ export const Header: React.FC<Props> = ({
           {/* Direct PDF Download Button */}
           <button
             type="button"
-            onMouseEnter={() => sfx.playHover()}
+            disabled={isExporting}
+            onMouseEnter={() => !isExporting && sfx.playHover()}
             onClick={() => {
-              sfx.playSuccess();
-              onExportPdf();
+              if (!isExporting) {
+                sfx.playSuccess();
+                onExportPdf();
+              }
             }}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-extrabold uppercase tracking-wider text-slate-950 bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-300 hover:from-cyan-300 hover:to-emerald-300 rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] active:scale-95 transition-all border border-cyan-200"
+            className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-extrabold uppercase tracking-wider rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] active:scale-95 transition-all border border-cyan-200 ${
+              isExporting
+                ? 'text-slate-700 bg-cyan-200 cursor-not-allowed opacity-80'
+                : 'text-slate-950 bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-300 hover:from-cyan-300 hover:to-emerald-300 cursor-pointer'
+            }`}
           >
-            <FileDown className="w-4 h-4 text-slate-950" />
-            <span>GENERATE_PDF.exe</span>
+            {isExporting ? (
+              <Loader2 className="w-4 h-4 text-slate-700 animate-spin" />
+            ) : (
+              <FileDown className="w-4 h-4 text-slate-950" />
+            )}
+            <span>{isExporting ? 'GENERATING...' : 'GENERATE_PDF.exe'}</span>
           </button>
         </div>
       </div>

@@ -31,6 +31,7 @@ type ActiveTab =
 export default function Home() {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
   const [activeTab, setActiveTab] = useState<ActiveTab>('personal');
+  const [isExporting, setIsExporting] = useState<boolean>(false);
 
   // Load saved state from LocalStorage on mount
   useEffect(() => {
@@ -55,11 +56,15 @@ export default function Home() {
   }, [resumeData]);
 
   const handleExportPdf = async () => {
+    if (isExporting) return; // prevent double-click
+    setIsExporting(true);
     try {
       const name = resumeData.personalInfo.fullName.trim() || 'Resume';
       await exportResumeToPdf('resume-preview', `${name.replace(/\s+/g, '_')}_Resume.pdf`);
     } catch (e) {
       console.error('[Page] PDF export error:', e);
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -121,6 +126,7 @@ export default function Home() {
         onPrint={handlePrint}
         onResetSampleData={handleResetSampleData}
         onClearData={handleClearData}
+        isExporting={isExporting}
       />
 
       {/* Main Split-Screen Command Workspace */}
