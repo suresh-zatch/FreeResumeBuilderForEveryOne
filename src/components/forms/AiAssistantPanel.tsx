@@ -516,15 +516,23 @@ export const AiAssistantPanel: React.FC<Props> = ({ data, onApplyPreset }) => {
           })}
         </div>
 
-        {/* Role cards */}
-        <div className="grid grid-cols-1 gap-2">
+        {/* Scroll hint */}
+        {filtered.length > 4 && (
+          <p className="text-[10px] font-mono text-slate-500 flex items-center gap-1">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            Showing {filtered.length} roles — scroll down to see all
+          </p>
+        )}
+
+        {/* Role cards — scrollable container */}
+        <div className="grid grid-cols-1 gap-2 max-h-[360px] overflow-y-auto pr-1">
           {filtered.map((preset, i) => {
             const globalIdx = ROLE_PRESETS.indexOf(preset);
             const isApplied = appliedIdx === globalIdx;
             return (
               <div
                 key={i}
-                className="p-3 bg-slate-900/80 border border-slate-700/80 hover:border-cyan-500/50 rounded-xl transition group flex items-center justify-between gap-3"
+                className="p-3 bg-slate-900/80 border border-slate-700/80 hover:border-cyan-500/50 rounded-xl transition group flex items-center justify-between gap-3 shrink-0"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="text-xl shrink-0">{preset.emoji}</span>
