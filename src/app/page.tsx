@@ -105,14 +105,14 @@ export default function Home() {
   };
 
   const TABS = [
-    { id: 'personal', label: 'MOD_01: IDENTITY', icon: User },
-    { id: 'experience', label: 'MOD_02: EXPERIENCE', icon: Briefcase },
-    { id: 'education', label: 'MOD_03: EDUCATION', icon: GraduationCap },
-    { id: 'projects', label: 'MOD_04: PROJECTS', icon: Rocket },
-    { id: 'certifications', label: 'MOD_05: CERTS', icon: Award },
-    { id: 'skills', label: 'MOD_06: SKILLS', icon: Code },
-    { id: 'theme', label: 'MOD_07: THEMES', icon: Palette },
-    { id: 'ai_assistant', label: 'MOD_08: AI_ATS', icon: Sparkles, badge: 'AI' },
+    { id: 'personal',       label: 'IDENTITY',    icon: User },
+    { id: 'experience',     label: 'EXPERIENCE',  icon: Briefcase },
+    { id: 'education',      label: 'EDUCATION',   icon: GraduationCap },
+    { id: 'projects',       label: 'PROJECTS',    icon: Rocket },
+    { id: 'certifications', label: 'CERTS',       icon: Award },
+    { id: 'skills',         label: 'SKILLS',      icon: Code },
+    { id: 'theme',          label: 'THEMES',      icon: Palette },
+    { id: 'ai_assistant',   label: 'AI_ATS',      icon: Sparkles, badge: 'AI' },
   ];
 
   return (
@@ -133,8 +133,8 @@ export default function Home() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start z-10 relative">
         {/* Left Column: Form Command Modules (5 Cols) */}
         <div className="lg:col-span-6 xl:col-span-5 cyber-glass rounded-2xl border border-cyan-500/30 overflow-hidden flex flex-col min-h-[730px] shadow-[0_0_30px_rgba(0,229,255,0.08)]">
-          {/* Module Tab Navigation */}
-          <div className="flex border-b border-cyan-500/20 bg-slate-950/80 overflow-x-auto no-scrollbar">
+          {/* Module Tab Navigation — 4×2 grid so all 8 tabs are always visible */}
+          <div className="grid grid-cols-4 border-b border-cyan-500/20 bg-slate-950/80">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -146,19 +146,21 @@ export default function Home() {
                     sfx.playClick();
                     setActiveTab(tab.id as ActiveTab);
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-3 text-xs font-mono font-bold whitespace-nowrap transition border-b-2 outline-none ${
+                  className={`flex flex-col items-center justify-center gap-1 py-2.5 px-1 text-[10px] font-mono font-bold transition border-b-2 outline-none ${
                     isActive
                       ? 'border-cyan-400 text-cyan-300 bg-slate-900 shadow-[0_0_15px_rgba(0,229,255,0.2)]'
                       : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
-                  <span>{tab.label}</span>
-                  {tab.badge && (
-                    <span className="text-[9px] font-mono font-black uppercase tracking-wider px-1 rounded bg-emerald-500 text-black">
-                      {tab.badge}
-                    </span>
-                  )}
+                  <div className="relative">
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
+                    {tab.badge && (
+                      <span className="absolute -top-1.5 -right-2 text-[8px] font-mono font-black uppercase px-0.5 rounded bg-emerald-500 text-black leading-tight">
+                        {tab.badge}
+                      </span>
+                    )}
+                  </div>
+                  <span className="truncate w-full text-center leading-none">{tab.label}</span>
                 </button>
               );
             })}
