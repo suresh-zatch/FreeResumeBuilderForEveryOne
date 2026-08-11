@@ -31,7 +31,6 @@ type ActiveTab =
 export default function Home() {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
   const [activeTab, setActiveTab] = useState<ActiveTab>('personal');
-  const [isExporting, setIsExporting] = useState(false);
 
   // Load saved state from LocalStorage on mount
   useEffect(() => {
@@ -56,14 +55,11 @@ export default function Home() {
   }, [resumeData]);
 
   const handleExportPdf = async () => {
-    setIsExporting(true);
     try {
       const name = resumeData.personalInfo.fullName.trim() || 'Resume';
       await exportResumeToPdf('resume-preview', `${name.replace(/\s+/g, '_')}_Resume.pdf`);
     } catch (e) {
       console.error('[Page] PDF export error:', e);
-    } finally {
-      setIsExporting(false);
     }
   };
 
@@ -245,16 +241,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      {/* Export Overlay Spinner */}
-      {isExporting && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center text-white">
-          <div className="bg-slate-900 border border-cyan-400/50 rounded-2xl p-6 shadow-[0_0_40px_rgba(0,229,255,0.4)] flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm font-mono font-bold text-cyan-300">COMPILING HIGH-RES 2026 PDF.exe...</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
