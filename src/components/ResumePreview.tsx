@@ -28,7 +28,7 @@ import { ElegantTemplate } from '@/components/templates/ElegantTemplate';
 import { BoldTemplate } from '@/components/templates/BoldTemplate';
 import { CompactTemplate } from '@/components/templates/CompactTemplate';
 import { ProfessionalTemplate } from '@/components/templates/ProfessionalTemplate';
-import { ZoomIn, ZoomOut, RotateCcw, Palette } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Palette, Maximize2, X, Box } from 'lucide-react';
 import { sfx } from '@/utils/audioSfx';
 
 interface Props {
@@ -66,18 +66,20 @@ const THEME_OPTIONS: { id: ResumeTheme; name: string }[] = [
 ];
 
 export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', onThemeChange }) => {
-  const [zoom, setZoom] = useState<number>(0.85);
+  const [zoom, setZoom] = useState<number>(0.95); // Increased default zoom for larger readable text
+  const [is3DEnabled, setIs3DEnabled] = useState<boolean>(true);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [tilt, setTilt] = useState<{ rx: number; ry: number }>({ rx: 0, ry: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
+    if (!is3DEnabled || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
 
-    const ry = (x / (rect.width / 2)) * 6;  // Interactive 3D tilt
-    const rx = -(y / (rect.height / 2)) * 6;
+    const ry = (x / (rect.width / 2)) * 4;  // Subtle crisp 3D tilt
+    const rx = -(y / (rect.height / 2)) * 4;
 
     setTilt({ rx, ry });
   };
@@ -144,105 +146,167 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 rounded-2xl border border-cyan-500/30 shadow-[0_0_35px_rgba(0,229,255,0.15)] overflow-hidden">
-      {/* Hologram Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-slate-900 border-b border-cyan-500/30 text-xs font-mono">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-          <span className="font-bold text-cyan-300 tracking-wider">3D_HOLOGRAM_PREVIEW</span>
-          <span className="text-[10px] text-slate-500 hidden sm:inline">(DRAG MOUSE TO TILT)</span>
-        </div>
+    <>
+      <div className="flex flex-col h-full bg-slate-950 rounded-2xl border border-cyan-500/30 shadow-[0_0_35px_rgba(0,229,255,0.15)] overflow-hidden">
+        {/* Hologram Controls Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-slate-900 border-b border-cyan-500/30 text-xs font-mono">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+            <span className="font-bold text-cyan-300 tracking-wider">LIVE_HOLOGRAM_PREVIEW</span>
+          </div>
 
-        {/* Instant Theme Dropdown Selector */}
-        {onThemeChange && (
-          <div className="flex items-center gap-1.5 bg-slate-950 border border-cyan-400/50 rounded-xl px-2.5 py-1 shadow-[0_0_10px_rgba(0,229,255,0.2)]">
-            <Palette className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-            <select
-              value={data.theme}
-              onChange={(e) => {
+          <div className="flex items-center gap-2">
+            {/* Instant Theme Dropdown Selector */}
+            {onThemeChange && (
+              <div className="flex items-center gap-1.5 bg-slate-950 border border-cyan-400/50 rounded-xl px-2.5 py-1 shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+                <Palette className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <select
+                  value={data.theme}
+                  onChange={(e) => {
+                    sfx.playClick();
+                    onThemeChange(e.target.value as ResumeTheme);
+                  }}
+                  className="text-xs font-mono font-bold text-cyan-300 bg-transparent outline-none cursor-pointer py-0.5"
+                >
+                  {THEME_OPTIONS.map((t) => (
+                    <option key={t.id} value={t.id} className="bg-slate-900 text-white font-mono">
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* 3D Tilt Toggle */}
+            <button
+              type="button"
+              onMouseEnter={() => sfx.playHover()}
+              onClick={() => {
                 sfx.playClick();
-                onThemeChange(e.target.value as ResumeTheme);
+                setIs3DEnabled((prev) => !prev);
               }}
-              className="text-xs font-mono font-bold text-cyan-300 bg-transparent outline-none cursor-pointer py-0.5"
+              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-mono font-bold border transition ${
+                is3DEnabled
+                  ? 'bg-cyan-950 text-cyan-300 border-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]'
+                  : 'bg-slate-900 text-slate-500 border-slate-800'
+              }`}
+              title="Toggle 3D Mouse Tilt Mode"
             >
-              {THEME_OPTIONS.map((t) => (
-                <option key={t.id} value={t.id} className="bg-slate-900 text-white font-mono">
-                  {t.name}
-                </option>
-              ))}
-            </select>
+              <Box className="w-3.5 h-3.5" />
+              <span>{is3DEnabled ? '3D: ON' : '3D: OFF'}</span>
+            </button>
+
+            {/* Fullscreen Maximize */}
+            <button
+              type="button"
+              onMouseEnter={() => sfx.playHover()}
+              onClick={() => {
+                sfx.playClick();
+                setIsFullscreen(true);
+              }}
+              className="p-1.5 bg-slate-950 text-cyan-400 hover:text-white border border-slate-800 rounded-xl transition"
+              title="Maximize Fullscreen View"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Zoom Controls */}
+            <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl p-0.5">
+              <button
+                type="button"
+                onMouseEnter={() => sfx.playHover()}
+                onClick={() => {
+                  sfx.playClick();
+                  setZoom((z) => Math.max(0.6, z - 0.05));
+                }}
+                className="p-1 hover:bg-slate-800 rounded text-cyan-400 transition"
+                title="Zoom Out"
+              >
+                <ZoomOut className="w-3.5 h-3.5" />
+              </button>
+              <span className="px-1 font-mono text-[11px] text-cyan-300 min-w-[36px] text-center font-bold">
+                {Math.round(zoom * 100)}%
+              </span>
+              <button
+                type="button"
+                onMouseEnter={() => sfx.playHover()}
+                onClick={() => {
+                  sfx.playClick();
+                  setZoom((z) => Math.min(1.3, z + 0.05));
+                }}
+                className="p-1 hover:bg-slate-800 rounded text-cyan-400 transition"
+                title="Zoom In"
+              >
+                <ZoomIn className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onMouseEnter={() => sfx.playHover()}
+                onClick={() => {
+                  sfx.playClick();
+                  setZoom(0.95);
+                }}
+                className="p-1 hover:bg-slate-800 rounded text-slate-400 transition border-l border-slate-800 pl-1.5"
+                title="Reset Zoom"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
-        )}
-
-        {/* Zoom Controls */}
-        <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl p-0.5">
-          <button
-            type="button"
-            onMouseEnter={() => sfx.playHover()}
-            onClick={() => {
-              sfx.playClick();
-              setZoom((z) => Math.max(0.5, z - 0.05));
-            }}
-            className="p-1 hover:bg-slate-800 rounded text-cyan-400 transition"
-            title="Zoom Out"
-          >
-            <ZoomOut className="w-3.5 h-3.5" />
-          </button>
-          <span className="px-1 font-mono text-[11px] text-cyan-300 min-w-[36px] text-center font-bold">
-            {Math.round(zoom * 100)}%
-          </span>
-          <button
-            type="button"
-            onMouseEnter={() => sfx.playHover()}
-            onClick={() => {
-              sfx.playClick();
-              setZoom((z) => Math.min(1.2, z + 0.05));
-            }}
-            className="p-1 hover:bg-slate-800 rounded text-cyan-400 transition"
-            title="Zoom In"
-          >
-            <ZoomIn className="w-3.5 h-3.5" />
-          </button>
-          <button
-            type="button"
-            onMouseEnter={() => sfx.playHover()}
-            onClick={() => {
-              sfx.playClick();
-              setZoom(0.85);
-            }}
-            className="p-1 hover:bg-slate-800 rounded text-slate-400 transition border-l border-slate-800 pl-1.5"
-            title="Reset Zoom"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
         </div>
-      </div>
 
-      {/* 3D Holographic Viewport Canvas with Mouse Tracking */}
-      <div
-        ref={containerRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="flex-1 overflow-auto p-4 flex justify-center items-start bg-slate-950/80 cursor-grab active:cursor-grabbing"
-        style={{ perspective: '1200px' }}
-      >
+        {/* Crisp Viewport Canvas */}
         <div
-          className="transition-transform duration-100 ease-out origin-top"
-          style={{
-            transform: `scale(${zoom}) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
-            transformStyle: 'preserve-3d',
-            backfaceVisibility: 'hidden',
-          }}
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          className="flex-1 overflow-auto p-4 flex justify-center items-start bg-slate-950/90 cursor-grab active:cursor-grabbing"
+          style={{ perspective: '1200px' }}
         >
-          {/* Target capturing element for PDF Export - High Contrast Clean A4 Paper */}
           <div
-            id={id}
-            className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-[0_0_35px_rgba(0,229,255,0.25)] overflow-hidden border border-cyan-400/40 relative antialiased"
+            className="transition-transform duration-100 ease-out origin-top"
+            style={{
+              transform: `scale(${zoom}) ${is3DEnabled ? `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)` : ''}`,
+              transformStyle: is3DEnabled ? 'preserve-3d' : 'flat',
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale',
+              willChange: 'transform',
+            }}
           >
-            {renderTemplate()}
+            {/* Target capturing element for PDF Export - High Contrast Clean A4 Paper */}
+            <div
+              id={id}
+              className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-[0_0_35px_rgba(0,229,255,0.25)] overflow-hidden border border-cyan-400/40 relative antialiased"
+            >
+              {renderTemplate()}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Fullscreen Maximized Modal */}
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col p-4">
+          <div className="flex items-center justify-between pb-3 border-b border-cyan-500/30 text-white font-mono">
+            <span className="text-sm font-bold text-cyan-300 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+              FULLSCREEN_HOLOGRAM_VIEWPORT (100% SCALE)
+            </span>
+            <button
+              type="button"
+              onClick={() => setIsFullscreen(false)}
+              className="p-1.5 bg-slate-900 border border-slate-700 hover:border-cyan-400 rounded-xl text-cyan-300"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-auto p-6 flex justify-center items-start">
+            <div className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-2xl overflow-hidden border border-cyan-400/40 antialiased">
+              {renderTemplate()}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
