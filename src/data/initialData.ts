@@ -56,8 +56,8 @@ export const initialResumeData: ResumeData = {
       degree: 'Bachelor of Science',
       fieldOfStudy: 'Computer Science & Artificial Intelligence',
       location: 'Berkeley, CA',
-      startDate: '2014-08',
-      endDate: '2018-05',
+      startDate: '2014',
+      endDate: '2018',
       gpa: '3.92 / 4.0',
       highlights: 'Dean’s Honor List (All Semesters). Lead Researcher at Berkeley AI Research Lab.',
     },
@@ -114,5 +114,5 @@ export const initialResumeData: ResumeData = {
     },
   ],
   theme: 'ai_fusion_2026',
-  accentColor: '#2563eb', // Royal Blue
+  accentColor: '#2563eb',
 };

@@ -118,7 +118,7 @@ export const EducationForm: React.FC<Props> = ({ education, onChange }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Institution / School</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Institution / School *</label>
                   <input
                     type="text"
                     value={item.institution}
@@ -129,7 +129,7 @@ export const EducationForm: React.FC<Props> = ({ education, onChange }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Degree</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Degree *</label>
                   <input
                     type="text"
                     value={item.degree}
@@ -161,15 +161,27 @@ export const EducationForm: React.FC<Props> = ({ education, onChange }) => {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Dates / Graduation Year</label>
-                  <input
-                    type="text"
-                    value={item.endDate}
-                    onChange={(e) => handleItemChange(index, 'endDate', e.target.value)}
-                    placeholder="e.g. 2017 - 2021"
-                    className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  />
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Start Year / Date</label>
+                    <input
+                      type="text"
+                      value={item.startDate || ''}
+                      onChange={(e) => handleItemChange(index, 'startDate', e.target.value)}
+                      placeholder="e.g. 2014"
+                      className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Graduation Year / End Date</label>
+                    <input
+                      type="text"
+                      value={item.endDate}
+                      onChange={(e) => handleItemChange(index, 'endDate', e.target.value)}
+                      placeholder="e.g. 2018"
+                      className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -185,12 +197,12 @@ export const EducationForm: React.FC<Props> = ({ education, onChange }) => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Highlights / Awards (Optional)</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Highlights / Academic Honors (Optional)</label>
                 <textarea
                   rows={2}
                   value={item.highlights || ''}
                   onChange={(e) => handleItemChange(index, 'highlights', e.target.value)}
-                  placeholder="Dean's list for 6 semesters, Special honors project..."
+                  placeholder="Dean's List for 6 semesters, Special honors research..."
                   className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y"
                 />
               </div>
