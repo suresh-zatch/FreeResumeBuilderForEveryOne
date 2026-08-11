@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ResumeData } from '@/types/resume';
+import { ResumeData, ResumeTheme } from '@/types/resume';
 import { AiFusion2026Template } from '@/components/templates/AiFusion2026Template';
 import { CyberTech2026Template } from '@/components/templates/CyberTech2026Template';
 import { ExecutivePrime2026Template } from '@/components/templates/ExecutivePrime2026Template';
@@ -28,14 +28,43 @@ import { ElegantTemplate } from '@/components/templates/ElegantTemplate';
 import { BoldTemplate } from '@/components/templates/BoldTemplate';
 import { CompactTemplate } from '@/components/templates/CompactTemplate';
 import { ProfessionalTemplate } from '@/components/templates/ProfessionalTemplate';
-import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Palette, Sparkles } from 'lucide-react';
 
 interface Props {
   data: ResumeData;
   id?: string;
+  onThemeChange?: (theme: ResumeTheme) => void;
 }
 
-export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview' }) => {
+const THEME_OPTIONS: { id: ResumeTheme; name: string }[] = [
+  { id: 'ai_fusion_2026', name: '⚡ AI Fusion 2026' },
+  { id: 'cyber_tech_2026', name: '🤖 CyberTech 2026' },
+  { id: 'executive_prime_2026', name: '👑 Executive Prime 2026' },
+  { id: 'glass_modern_2026', name: '✨ Glass Modern 2026' },
+  { id: 'creative_portfolio_2026', name: '🎨 Creative Portfolio 2026' },
+  { id: 'minimal_horizon_2026', name: '📄 Minimal Horizon 2026' },
+  { id: 'silicon_valley_2026', name: '🚀 Silicon Valley Tech 2026' },
+  { id: 'hyper_grid_2026', name: '📐 HyperGrid Asymmetric 2026' },
+  { id: 'quantum_clean_2026', name: '🇨🇭 Quantum Clean 2026' },
+  { id: 'neon_futuristic_2026', name: '🌌 Futuristic Cyber 2026' },
+  { id: 'metro_compact_2026', name: '📊 Metro Compact 2026' },
+  { id: 'monochrome_chic_2026', name: '💎 Monochrome Chic 2026' },
+  { id: 'gradient_pulse_2026', name: '🌈 Gradient Pulse 2026' },
+  { id: 'nordic_minimal_2026', name: '🌿 Nordic Minimal 2026' },
+  { id: 'apex_leadership_2026', name: '🏢 Apex Leadership 2026' },
+  { id: 'modern', name: 'Modern Classic' },
+  { id: 'minimal', name: 'Minimal Pure' },
+  { id: 'classic', name: 'Classic Standard' },
+  { id: 'executive', name: 'Executive Standard' },
+  { id: 'creative', name: 'Creative Sidebar' },
+  { id: 'technical', name: 'Technical Code' },
+  { id: 'elegant', name: 'Elegant Serif' },
+  { id: 'bold', name: 'Bold Impact' },
+  { id: 'compact', name: 'Compact Density' },
+  { id: 'professional', name: 'Professional Grid' },
+];
+
+export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', onThemeChange }) => {
   const [zoom, setZoom] = useState<number>(0.85);
 
   const renderTemplate = () => {
@@ -97,16 +126,34 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview' }) 
 
   return (
     <div className="flex flex-col h-full bg-slate-900/5 backdrop-blur rounded-2xl border border-gray-200/80 shadow-inner overflow-hidden">
-      {/* Top Preview Controls Bar */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-100 border-b border-gray-200 text-xs text-gray-600">
+      {/* Top Preview Controls & Theme Selector Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-gray-100 border-b border-gray-200 text-xs text-gray-600">
         <div className="flex items-center gap-2">
           <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           <span className="font-semibold text-gray-700">Live Preview</span>
-          <span className="text-[11px] text-gray-400 font-mono">(A4 Canvas)</span>
         </div>
 
+        {/* Instant Theme Dropdown Selector */}
+        {onThemeChange && (
+          <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg px-2 py-1 shadow-2xs">
+            <Palette className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+            <span className="text-[11px] font-bold text-gray-700 shrink-0 hidden sm:inline">Theme:</span>
+            <select
+              value={data.theme}
+              onChange={(e) => onThemeChange(e.target.value as ResumeTheme)}
+              className="text-xs font-semibold text-indigo-900 bg-transparent outline-none cursor-pointer py-0.5"
+            >
+              {THEME_OPTIONS.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         {/* Zoom Controls */}
-        <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg p-0.5 shadow-sm">
+        <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg p-0.5 shadow-2xs">
           <button
             type="button"
             onClick={() => setZoom((z) => Math.max(0.5, z - 0.05))}

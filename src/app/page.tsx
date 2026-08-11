@@ -216,14 +216,20 @@ export default function Home() {
 
         {/* Right Column: Live Resume Preview (7 Cols) */}
         <div className="lg:col-span-6 xl:col-span-7 sticky top-20 h-[calc(100vh-100px)] hidden lg:block">
-          <ResumePreview data={resumeData} />
+          <ResumePreview
+            data={resumeData}
+            onThemeChange={(theme) => setResumeData({ ...resumeData, theme })}
+          />
         </div>
 
         {/* Mobile Preview Fallback */}
         <div className="block lg:hidden col-span-1 border-t border-slate-200 pt-6">
           <h3 className="text-sm font-bold text-slate-800 mb-3">Live Resume Preview</h3>
           <div className="h-[600px] overflow-hidden rounded-xl border border-slate-200">
-            <ResumePreview data={resumeData} />
+            <ResumePreview
+              data={resumeData}
+              onThemeChange={(theme) => setResumeData({ ...resumeData, theme })}
+            />
           </div>
         </div>
       </main>
