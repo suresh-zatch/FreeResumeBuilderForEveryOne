@@ -8,6 +8,15 @@ import { ExecutivePrime2026Template } from '@/components/templates/ExecutivePrim
 import { GlassModern2026Template } from '@/components/templates/GlassModern2026Template';
 import { CreativePortfolio2026Template } from '@/components/templates/CreativePortfolio2026Template';
 import { MinimalHorizon2026Template } from '@/components/templates/MinimalHorizon2026Template';
+import { SiliconValley2026Template } from '@/components/templates/SiliconValley2026Template';
+import { HyperGrid2026Template } from '@/components/templates/HyperGrid2026Template';
+import { QuantumClean2026Template } from '@/components/templates/QuantumClean2026Template';
+import { NeonFuturistic2026Template } from '@/components/templates/NeonFuturistic2026Template';
+import { MetroCompact2026Template } from '@/components/templates/MetroCompact2026Template';
+import { MonochromeChic2026Template } from '@/components/templates/MonochromeChic2026Template';
+import { GradientPulse2026Template } from '@/components/templates/GradientPulse2026Template';
+import { NordicMinimal2026Template } from '@/components/templates/NordicMinimal2026Template';
+import { ApexLeadership2026Template } from '@/components/templates/ApexLeadership2026Template';
 
 import { ModernTemplate } from '@/components/templates/ModernTemplate';
 import { MinimalTemplate } from '@/components/templates/MinimalTemplate';
@@ -43,6 +52,24 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview' }) 
         return <CreativePortfolio2026Template data={data} />;
       case 'minimal_horizon_2026':
         return <MinimalHorizon2026Template data={data} />;
+      case 'silicon_valley_2026':
+        return <SiliconValley2026Template data={data} />;
+      case 'hyper_grid_2026':
+        return <HyperGrid2026Template data={data} />;
+      case 'quantum_clean_2026':
+        return <QuantumClean2026Template data={data} />;
+      case 'neon_futuristic_2026':
+        return <NeonFuturistic2026Template data={data} />;
+      case 'metro_compact_2026':
+        return <MetroCompact2026Template data={data} />;
+      case 'monochrome_chic_2026':
+        return <MonochromeChic2026Template data={data} />;
+      case 'gradient_pulse_2026':
+        return <GradientPulse2026Template data={data} />;
+      case 'nordic_minimal_2026':
+        return <NordicMinimal2026Template data={data} />;
+      case 'apex_leadership_2026':
+        return <ApexLeadership2026Template data={data} />;
 
       case 'minimal':
         return <MinimalTemplate data={data} />;
