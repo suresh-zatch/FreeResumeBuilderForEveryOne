@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { SkillCategory } from '@/types/resume';
-import { Code, Plus, Trash2, X } from 'lucide-react';
+import { Code, Plus, Trash2, X, Terminal } from 'lucide-react';
+import { sfx } from '@/utils/audioSfx';
 
 interface Props {
   skillCategories: SkillCategory[];
@@ -19,6 +20,7 @@ export const SkillsForm: React.FC<Props> = ({ skillCategories, onChange }) => {
   };
 
   const handleAddCategory = () => {
+    sfx.playClick();
     const newCat: SkillCategory = {
       id: `cat-${Date.now()}`,
       categoryName: 'New Category',
@@ -28,6 +30,7 @@ export const SkillsForm: React.FC<Props> = ({ skillCategories, onChange }) => {
   };
 
   const handleRemoveCategory = (catIndex: number) => {
+    sfx.playPurge();
     const updated = skillCategories.filter((_, i) => i !== catIndex);
     onChange(updated);
   };
@@ -37,6 +40,7 @@ export const SkillsForm: React.FC<Props> = ({ skillCategories, onChange }) => {
     const value = (newSkillInput[catId] || '').trim();
     if (!value) return;
 
+    sfx.playClick();
     const updated = [...skillCategories];
     if (!updated[catIndex].skills.includes(value)) {
       updated[catIndex] = {
@@ -49,6 +53,7 @@ export const SkillsForm: React.FC<Props> = ({ skillCategories, onChange }) => {
   };
 
   const handleRemoveSkillTag = (catIndex: number, skillIndex: number) => {
+    sfx.playHover();
     const updated = [...skillCategories];
     const newSkills = updated[catIndex].skills.filter((_, i) => i !== skillIndex);
     updated[catIndex] = { ...updated[catIndex], skills: newSkills };
@@ -56,51 +61,52 @@ export const SkillsForm: React.FC<Props> = ({ skillCategories, onChange }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+    <div className="space-y-4 font-mono">
+      <div className="flex items-center justify-between border-b border-cyan-500/20 pb-3">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <Code className="w-5 h-5 text-blue-600" />
-            Skills & Competencies
+          <h2 className="text-base font-bold text-cyan-300 flex items-center gap-2 uppercase tracking-wider">
+            <Terminal className="w-5 h-5 text-cyan-400" />
+            // MODULE 06: SKILLS_MATRIX
           </h2>
-          <p className="text-xs text-gray-500">Group your skills into categories like Frontend, Backend, Tools, etc.</p>
+          <p className="text-[11px] text-slate-400">Group technical skills into categories like AI/ML, Cloud, Frontend, etc.</p>
         </div>
         <button
           type="button"
+          onMouseEnter={() => sfx.playHover()}
           onClick={handleAddCategory}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 rounded-lg shadow-[0_0_10px_rgba(0,229,255,0.3)] transition"
         >
-          <Plus className="w-4 h-4" /> Add Category
+          <Plus className="w-4 h-4" /> ADD_CATEGORY
         </button>
       </div>
 
       {skillCategories.length === 0 ? (
-        <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50">
-          <p className="text-sm text-gray-500 mb-2">No skill categories added yet.</p>
+        <div className="text-center py-8 border border-dashed border-cyan-500/30 rounded-xl bg-slate-950/60">
+          <p className="text-xs text-slate-400 mb-2">// NO_SKILL_CATEGORIES_DETECTED</p>
           <button
             type="button"
             onClick={handleAddCategory}
-            className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 hover:underline"
           >
-            <Plus className="w-3.5 h-3.5" /> Add a category
+            <Plus className="w-3.5 h-3.5" /> Initialize first skill category
           </button>
         </div>
       ) : (
         <div className="space-y-4">
           {skillCategories.map((category, catIndex) => (
-            <div key={category.id} className="p-4 bg-white border border-gray-200 rounded-xl shadow-sm space-y-3">
+            <div key={category.id} className="p-4 bg-slate-950/90 border border-cyan-500/30 rounded-xl shadow-lg space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <input
                   type="text"
                   value={category.categoryName}
                   onChange={(e) => handleCategoryNameChange(catIndex, e.target.value)}
                   placeholder="Category Name (e.g. Technical Skills)"
-                  className="font-semibold text-sm text-gray-900 px-2 py-1 border border-transparent hover:border-gray-300 focus:border-blue-500 rounded outline-none transition"
+                  className="font-bold text-xs text-cyan-300 bg-slate-900 px-3 py-1.5 border border-slate-800 focus:border-cyan-400 rounded-lg outline-none transition"
                 />
                 <button
                   type="button"
                   onClick={() => handleRemoveCategory(catIndex)}
-                  className="p-1 text-red-500 hover:text-red-700 transition"
+                  className="p-1 text-rose-400 hover:text-rose-300 transition"
                   title="Remove Category"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -108,20 +114,20 @@ export const SkillsForm: React.FC<Props> = ({ skillCategories, onChange }) => {
               </div>
 
               {/* Tag Badges */}
-              <div className="flex flex-wrap gap-1.5 min-h-[32px] p-2 bg-gray-50 border border-gray-200 rounded-lg">
+              <div className="flex flex-wrap gap-1.5 min-h-[36px] p-2 bg-slate-900 border border-slate-800 rounded-lg">
                 {category.skills.length === 0 ? (
-                  <span className="text-xs text-gray-400 italic">No skills added yet. Type below and press Enter.</span>
+                  <span className="text-xs text-slate-500 italic">// No skills added yet. Type below and press Enter.</span>
                 ) : (
                   category.skills.map((skill, skillIndex) => (
                     <span
                       key={skillIndex}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-cyan-950 text-cyan-300 border border-cyan-500/40"
                     >
                       {skill}
                       <button
                         type="button"
                         onClick={() => handleRemoveSkillTag(catIndex, skillIndex)}
-                        className="hover:text-blue-900 transition"
+                        className="hover:text-white transition"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -142,15 +148,16 @@ export const SkillsForm: React.FC<Props> = ({ skillCategories, onChange }) => {
                       handleAddSkillTag(catIndex);
                     }
                   }}
-                  placeholder="Add skill (e.g. TypeScript, React) and press Enter"
-                  className="flex-1 px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  placeholder="Type skill tag (e.g. TypeScript, PyTorch) and press Enter"
+                  className="flex-1 px-3 py-1.5 text-xs bg-slate-900 text-white border border-slate-800 rounded-lg focus:border-cyan-400 outline-none font-mono"
                 />
                 <button
                   type="button"
+                  onMouseEnter={() => sfx.playHover()}
                   onClick={() => handleAddSkillTag(catIndex)}
-                  className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+                  className="px-3 py-1.5 text-xs font-bold text-cyan-300 bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition"
                 >
-                  Add Tag
+                  + TAG
                 </button>
               </div>
             </div>
