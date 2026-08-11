@@ -516,53 +516,44 @@ export const AiAssistantPanel: React.FC<Props> = ({ data, onApplyPreset }) => {
           })}
         </div>
 
-        {/* Scroll hint */}
-        {filtered.length > 4 && (
-          <p className="text-[10px] font-mono text-slate-500 flex items-center gap-1">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            Showing {filtered.length} roles — scroll down to see all
-          </p>
-        )}
-
-        {/* Role cards — scrollable container */}
-        <div className="grid grid-cols-1 gap-2 pr-1" style={{ maxHeight: '380px', overflowY: 'auto' }}>
+        {/* Role cards — 2-column compact grid, no inner scroll */}
+        <div className="grid grid-cols-2 gap-2">
           {filtered.map((preset, i) => {
             const globalIdx = ROLE_PRESETS.indexOf(preset);
             const isApplied = appliedIdx === globalIdx;
             return (
-              <div
+              <button
                 key={i}
-                className="p-3 bg-slate-900/80 border border-slate-700/80 hover:border-cyan-500/50 rounded-xl transition group flex items-center justify-between gap-3 shrink-0"
+                type="button"
+                onClick={() => {
+                  sfx.playSuccess();
+                  onApplyPreset({ ...preset.data, theme: preset.theme, accentColor: preset.accentColor });
+                  setAppliedIdx(globalIdx);
+                  setTimeout(() => setAppliedIdx(null), 2000);
+                }}
+                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition group w-full ${
+                  isApplied
+                    ? 'bg-emerald-500/10 border-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.2)]'
+                    : 'bg-slate-900/80 border-slate-700/80 hover:border-cyan-500/60 hover:bg-cyan-950/30'
+                }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="text-xl shrink-0">{preset.emoji}</span>
-                  <div className="min-w-0">
-                    <h4 className="text-[11px] font-bold text-white font-mono truncate group-hover:text-cyan-300 transition">{preset.title}</h4>
-                    <p className="text-[10px] text-slate-500 font-mono truncate">{preset.subtitle}</p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    sfx.playSuccess();
-                    onApplyPreset({ ...preset.data, theme: preset.theme, accentColor: preset.accentColor });
-                    setAppliedIdx(globalIdx);
-                    setTimeout(() => setAppliedIdx(null), 2000);
-                  }}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg transition shrink-0 border ${
-                    isApplied
-                      ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
-                      : 'bg-cyan-500/10 border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400'
-                  }`}
-                >
-                  {isApplied ? <CheckCircle2 className="w-3 h-3" /> : <ArrowRight className="w-3 h-3" />}
+                <span className="text-2xl">{preset.emoji}</span>
+                <span className="text-[10px] font-bold font-mono text-white leading-tight group-hover:text-cyan-300 transition line-clamp-2">
+                  {preset.title}
+                </span>
+                <span className={`mt-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-mono font-bold border ${
+                  isApplied
+                    ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
+                    : 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400'
+                }`}>
+                  {isApplied ? <CheckCircle2 className="w-2.5 h-2.5" /> : <ArrowRight className="w-2.5 h-2.5" />}
                   {isApplied ? 'APPLIED!' : 'APPLY'}
-                </button>
-              </div>
+                </span>
+              </button>
             );
           })}
           {filtered.length === 0 && (
-            <p className="text-center text-slate-500 font-mono text-xs py-4">No presets in this category yet.</p>
+            <p className="col-span-2 text-center text-slate-500 font-mono text-xs py-4">No presets in this category yet.</p>
           )}
         </div>
       </div>
