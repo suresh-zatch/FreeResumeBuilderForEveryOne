@@ -1,5 +1,9 @@
 import { ResumeData } from '@/types/resume';
 
+// Clean Base64 Data URL for avatar to prevent CORS/image loading errors
+const defaultAvatar =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="%232563eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+
 export const initialResumeData: ResumeData = {
   personalInfo: {
     fullName: 'Alex Vance',
@@ -12,7 +16,7 @@ export const initialResumeData: ResumeData = {
     github: 'github.com/alexvance',
     summary:
       'Passionate and results-driven Senior AI & Full-Stack Architect with 8+ years of experience engineering scalable LLM agent systems, cloud microservices, and real-time distributed applications. Proven track record of boosting enterprise platform throughput by 45% and leading high-performing engineering teams.',
-    photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
+    photoUrl: defaultAvatar,
   },
   experience: [
     {
