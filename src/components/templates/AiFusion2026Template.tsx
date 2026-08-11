@@ -19,15 +19,12 @@ export const AiFusion2026Template: React.FC<Props> = ({ data }) => {
 
   return (
     <div className="w-full bg-white text-slate-900 font-sans text-xs leading-relaxed min-h-[1050px]">
-      {/* 2026 Hero Header Banner */}
+      {/* Hero Header Banner */}
       <div
         className="p-8 text-white relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
         style={{ backgroundColor: accentColor || '#2563eb' }}
       >
         <div className="space-y-1.5 z-10 max-w-xl">
-          <div className="inline-block px-2.5 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-widest bg-white/20 backdrop-blur-md text-white border border-white/20">
-            2026 AI Era Verified Profile
-          </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-xs">
             {personalInfo.fullName || 'Your Name'}
           </h1>
