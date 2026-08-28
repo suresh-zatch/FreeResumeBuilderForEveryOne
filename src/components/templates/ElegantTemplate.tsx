@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -13,7 +14,7 @@ export const ElegantTemplate: React.FC<Props> = ({ data }) => {
     personalInfo.phone,
     personalInfo.location,
     personalInfo.website,
-    personalInfo.linkedin && `LinkedIn: ${personalInfo.linkedin}`,
+    personalInfo.linkedin,
   ].filter(Boolean);
 
   const Divider = () => (
@@ -37,7 +38,7 @@ export const ElegantTemplate: React.FC<Props> = ({ data }) => {
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-gray-500 font-light tracking-wide">
           {contactItems.map((item, index) => (
             <React.Fragment key={index}>
-              <span>{item}</span>
+              <ContactLink value={item} type={getContactType(item, personalInfo)} />
               {index < contactItems.length - 1 && <span className="text-gray-300">|</span>}
             </React.Fragment>
           ))}

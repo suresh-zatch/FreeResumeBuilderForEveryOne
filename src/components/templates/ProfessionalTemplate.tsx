@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -28,7 +29,9 @@ export const ProfessionalTemplate: React.FC<Props> = ({ data }) => {
         </div>
         <div className="text-right text-sm text-gray-600 space-y-1">
           {contacts.map((contact, i) => (
-            <div key={i}>{contact}</div>
+            <div key={i}>
+              <ContactLink value={contact} type={getContactType(contact, personalInfo)} />
+            </div>
           ))}
         </div>
       </header>

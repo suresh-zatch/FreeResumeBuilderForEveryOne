@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -21,12 +22,12 @@ export const CompactTemplate: React.FC<Props> = ({ data }) => {
           <section>
             <h3 className="font-bold uppercase tracking-wider mb-2 pb-1 border-b" style={{ color: accentColor, borderBottomColor: accentColor }}>Contact</h3>
             <div className="space-y-1 text-gray-700">
-              {personalInfo.email && <div>✉ {personalInfo.email}</div>}
-              {personalInfo.phone && <div>☎ {personalInfo.phone}</div>}
+              {personalInfo.email && <div>✉ <ContactLink value={personalInfo.email} type="email" /></div>}
+              {personalInfo.phone && <div>☎ <ContactLink value={personalInfo.phone} type="phone" /></div>}
               {personalInfo.location && <div>⌂ {personalInfo.location}</div>}
-              {personalInfo.website && <div>🌐 {personalInfo.website}</div>}
-              {personalInfo.linkedin && <div>in {personalInfo.linkedin}</div>}
-              {personalInfo.github && <div>gh {personalInfo.github}</div>}
+              {personalInfo.website && <div>🌐 <ContactLink value={personalInfo.website} type="website" /></div>}
+              {personalInfo.linkedin && <div>in <ContactLink value={personalInfo.linkedin} type="linkedin" /></div>}
+              {personalInfo.github && <div>gh <ContactLink value={personalInfo.github} type="github" /></div>}
             </div>
           </section>
 

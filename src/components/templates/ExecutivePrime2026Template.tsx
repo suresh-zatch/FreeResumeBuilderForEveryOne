@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -32,7 +33,12 @@ export const ExecutivePrime2026Template: React.FC<Props> = ({ data }) => {
           </p>
           {contactItems.length > 0 && (
             <p className="text-[10px] font-sans text-slate-500 tracking-tight pt-2">
-              {contactItems.join('   |   ')}
+              {contactItems.map((item, idx) => (
+                <React.Fragment key={idx}>
+                  {idx > 0 && '   |   '}
+                  <ContactLink value={item} type={getContactType(item, personalInfo)} />
+                </React.Fragment>
+              ))}
             </p>
           )}
         </div>

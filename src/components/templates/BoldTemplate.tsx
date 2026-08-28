@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -24,7 +25,12 @@ export const BoldTemplate: React.FC<Props> = ({ data }) => {
         <h2 className="text-2xl font-bold opacity-80 uppercase tracking-wide mb-6">{personalInfo.jobTitle}</h2>
         <div className="flex flex-wrap gap-3 text-sm font-medium">
           {contacts.map((contact, i) => (
-            <span key={i} className="bg-white/20 px-3 py-1 rounded-full">{contact}</span>
+            <ContactLink
+              key={i}
+              value={contact}
+              type={getContactType(contact, personalInfo)}
+              className="bg-white/20 px-3 py-1 rounded-full"
+            />
           ))}
         </div>
       </div>

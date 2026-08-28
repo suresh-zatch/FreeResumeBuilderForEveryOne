@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -9,13 +10,13 @@ export const TechnicalTemplate: React.FC<Props> = ({ data }) => {
   const { personalInfo, experience, education, skillCategories, accentColor } = data;
 
   const contactItems = [
-    personalInfo.email && `@ ${personalInfo.email}`,
-    personalInfo.phone && `📞 ${personalInfo.phone}`,
-    personalInfo.location && `📍 ${personalInfo.location}`,
-    personalInfo.website && `→ ${personalInfo.website}`,
-    personalInfo.linkedin && `in/ ${personalInfo.linkedin}`,
-    personalInfo.github && `git/ ${personalInfo.github}`,
-  ].filter(Boolean);
+    personalInfo.email && { prefix: '@ ', value: personalInfo.email, type: 'email' as const },
+    personalInfo.phone && { prefix: '📞 ', value: personalInfo.phone, type: 'phone' as const },
+    personalInfo.location && { prefix: '📍 ', value: personalInfo.location, type: 'location' as const },
+    personalInfo.website && { prefix: '→ ', value: personalInfo.website, type: 'website' as const },
+    personalInfo.linkedin && { prefix: 'in/ ', value: personalInfo.linkedin, type: 'linkedin' as const },
+    personalInfo.github && { prefix: 'git/ ', value: personalInfo.github, type: 'github' as const },
+  ].filter((item): item is { prefix: string; value: string; type: 'email' | 'phone' | 'location' | 'website' | 'linkedin' | 'github' } => Boolean(item));
 
   return (
     <div className="w-full bg-white text-gray-900 min-h-[1050px] font-sans p-10 mx-auto max-w-4xl shadow-sm relative">
@@ -34,7 +35,8 @@ export const TechnicalTemplate: React.FC<Props> = ({ data }) => {
           <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600 font-mono">
             {contactItems.map((item, index) => (
               <span key={index} className="flex items-center">
-                {item}
+                <span>{item.prefix}</span>
+                <ContactLink value={item.value} type={item.type} />
               </span>
             ))}
           </div>

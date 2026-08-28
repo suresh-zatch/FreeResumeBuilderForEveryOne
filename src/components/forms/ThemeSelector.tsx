@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { ResumeTheme } from '@/types/resume';
-import { Palette, Check, Sparkles, Terminal } from 'lucide-react';
-import { sfx } from '@/utils/audioSfx';
+import { Palette, Check, Sparkles } from 'lucide-react';
 
 interface Props {
   currentTheme: ResumeTheme;
@@ -130,19 +129,19 @@ export const ThemeSelector: React.FC<Props> = ({
   onColorChange,
 }) => {
   return (
-    <div className="space-y-6 font-mono">
-      <div className="border-b border-cyan-500/20 pb-3">
-        <h2 className="text-base font-bold text-cyan-300 flex items-center gap-2 uppercase tracking-wider">
-          <Terminal className="w-5 h-5 text-cyan-400" />
-          // MODULE 07: TEMPLATE_&_COLOR_THEMES
+    <div className="space-y-6">
+      <div className="border-b border-gray-200 pb-3">
+        <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <Palette className="w-4 h-4 text-blue-600" />
+          Template & Color Themes
         </h2>
-        <p className="text-[11px] text-slate-400">Choose from 15 newly designed resume themes and custom accent palettes.</p>
+        <p className="text-xs text-gray-500 mt-0.5">Choose from 15 newly designed resume themes and custom accent palettes.</p>
       </div>
 
       {/* Accent Color Palette Selector */}
-      <div className="bg-slate-950/90 p-4 rounded-xl border border-cyan-500/30 space-y-2">
-        <label className="block text-xs font-bold uppercase tracking-wider text-cyan-300">
-          $ select_accent_color
+      <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
+        <label className="block text-xs font-semibold text-gray-700">
+          Select Accent Color
         </label>
         <div className="flex flex-wrap items-center gap-3 pt-1">
           {ACCENT_COLORS.map((c) => {
@@ -151,12 +150,8 @@ export const ThemeSelector: React.FC<Props> = ({
               <button
                 key={c.hex}
                 type="button"
-                onMouseEnter={() => sfx.playHover()}
-                onClick={() => {
-                  sfx.playClick();
-                  onColorChange(c.hex);
-                }}
-                className="group relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-slate-700 shadow-md transition hover:scale-110"
+                onClick={() => onColorChange(c.hex)}
+                className={`group relative flex items-center justify-center w-8 h-8 rounded-full shadow-sm transition hover:scale-110 ${isSelected ? 'ring-2 ring-offset-2 ring-blue-600' : 'border border-gray-200'}`}
                 style={{ backgroundColor: c.hex }}
                 title={c.name}
               >
@@ -171,14 +166,11 @@ export const ThemeSelector: React.FC<Props> = ({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
-            <h3 className="text-xs font-extrabold uppercase tracking-wider text-cyan-300">
+            <Sparkles className="w-4 h-4 text-blue-600" />
+            <h3 className="text-xs font-bold text-gray-900">
               15 Newly Designed Themes
             </h3>
           </div>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-500/40">
-            15 THEMES READY
-          </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -188,28 +180,24 @@ export const ThemeSelector: React.FC<Props> = ({
               <button
                 key={t.id}
                 type="button"
-                onMouseEnter={() => sfx.playHover()}
-                onClick={() => {
-                  sfx.playClick();
-                  onThemeChange(t.id);
-                }}
+                onClick={() => onThemeChange(t.id)}
                 className={`text-left p-3.5 rounded-xl border transition-all relative ${
                   isSelected
-                    ? 'border-cyan-400 bg-slate-900 shadow-[0_0_15px_rgba(0,229,255,0.2)]'
-                    : 'border-slate-800 hover:border-cyan-500/50 bg-slate-950/80 hover:bg-slate-900/60'
+                    ? 'border-blue-600 bg-blue-50/30 ring-1 ring-blue-600'
+                    : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-gray-50'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-white">{t.name}</span>
+                  <span className="text-sm font-bold text-gray-900">{t.name}</span>
                   <span
-                    className={`text-[9px] uppercase font-bold px-2 py-0.5 rounded ${
-                      isSelected ? 'bg-cyan-400 text-slate-950 font-black' : 'bg-slate-900 text-cyan-400 border border-slate-800'
+                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                      isSelected ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'
                     }`}
                   >
                     {t.tag}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed font-sans">{t.description}</p>
+                <p className="text-xs text-gray-500 leading-relaxed mt-1">{t.description}</p>
               </button>
             );
           })}

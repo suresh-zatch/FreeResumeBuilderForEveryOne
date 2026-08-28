@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -33,7 +34,7 @@ export const MinimalTemplate: React.FC<Props> = ({ data }) => {
             {contactItems.map((item, idx) => (
               <React.Fragment key={idx}>
                 {idx > 0 && <span>•</span>}
-                <span>{item}</span>
+                <ContactLink value={item} type={getContactType(item, personalInfo)} />
               </React.Fragment>
             ))}
           </div>

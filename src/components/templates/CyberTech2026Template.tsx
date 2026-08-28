@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -9,13 +10,13 @@ export const CyberTech2026Template: React.FC<Props> = ({ data }) => {
   const { personalInfo, experience, education, skillCategories, projects, certifications, accentColor } = data;
 
   const contactItems = [
-    personalInfo.email && `EMAIL: ${personalInfo.email}`,
-    personalInfo.phone && `TEL: ${personalInfo.phone}`,
-    personalInfo.location && `LOC: ${personalInfo.location}`,
-    personalInfo.website && `WEB: ${personalInfo.website}`,
-    personalInfo.linkedin && `LINKEDIN: ${personalInfo.linkedin}`,
-    personalInfo.github && `GITHUB: ${personalInfo.github}`,
-  ].filter(Boolean) as string[];
+    personalInfo.email && { label: `EMAIL: ${personalInfo.email}`, value: personalInfo.email, type: 'email' as const },
+    personalInfo.phone && { label: `TEL: ${personalInfo.phone}`, value: personalInfo.phone, type: 'phone' as const },
+    personalInfo.location && { label: `LOC: ${personalInfo.location}`, value: personalInfo.location, type: 'location' as const },
+    personalInfo.website && { label: `WEB: ${personalInfo.website}`, value: personalInfo.website, type: 'website' as const },
+    personalInfo.linkedin && { label: `LINKEDIN: ${personalInfo.linkedin}`, value: personalInfo.linkedin, type: 'linkedin' as const },
+    personalInfo.github && { label: `GITHUB: ${personalInfo.github}`, value: personalInfo.github, type: 'github' as const },
+  ].filter(Boolean) as { label: string; value: string; type: 'email' | 'phone' | 'location' | 'website' | 'linkedin' | 'github' }[];
 
   return (
     <div className="w-full bg-white text-slate-900 font-sans text-xs leading-relaxed min-h-[1050px] p-8 space-y-6">
@@ -54,7 +55,9 @@ export const CyberTech2026Template: React.FC<Props> = ({ data }) => {
         {contactItems.length > 0 && (
           <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-slate-300 pt-1 border-t border-slate-900">
             {contactItems.map((item, idx) => (
-              <span key={idx}>{item}</span>
+              <ContactLink key={idx} value={item.value} type={item.type}>
+                {item.label}
+              </ContactLink>
             ))}
           </div>
         )}

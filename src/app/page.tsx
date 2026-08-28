@@ -5,7 +5,6 @@ import { ResumeData } from '@/types/resume';
 import { initialResumeData } from '@/data/initialData';
 import { exportResumeToPdf } from '@/utils/exportPdf';
 import { Header } from '@/components/Header';
-import { CyberParticleCanvas } from '@/components/CyberParticleCanvas';
 import { PersonalInfoForm } from '@/components/forms/PersonalInfoForm';
 import { ExperienceForm } from '@/components/forms/ExperienceForm';
 import { EducationForm } from '@/components/forms/EducationForm';
@@ -15,8 +14,7 @@ import { SkillsForm } from '@/components/forms/SkillsForm';
 import { ThemeSelector } from '@/components/forms/ThemeSelector';
 import { AiAssistantPanel } from '@/components/forms/AiAssistantPanel';
 import { ResumePreview } from '@/components/ResumePreview';
-import { User, Briefcase, GraduationCap, Rocket, Award, Code, Palette, Sparkles, Terminal } from 'lucide-react';
-import { sfx } from '@/utils/audioSfx';
+import { User, Briefcase, GraduationCap, Rocket, Award, Code, Palette, Sparkles } from 'lucide-react';
 
 type ActiveTab =
   | 'personal'
@@ -56,7 +54,7 @@ export default function Home() {
   }, [resumeData]);
 
   const handleExportPdf = async () => {
-    if (isExporting) return; // prevent double-click
+    if (isExporting) return;
     setIsExporting(true);
     try {
       const name = resumeData.personalInfo.fullName.trim() || 'Resume';
@@ -73,54 +71,49 @@ export default function Home() {
   };
 
   const handleResetSampleData = () => {
-    if (window.confirm('Reset all fields to sample 2026 data?')) {
+    if (window.confirm('Reset all fields to sample data?')) {
       setResumeData(initialResumeData);
     }
   };
 
   const handleClearData = () => {
-    if (window.confirm('Are you sure you want to clear all form entries?')) {
-      setResumeData({
-        personalInfo: {
-          fullName: '',
-          jobTitle: '',
-          email: '',
-          phone: '',
-          location: '',
-          website: '',
-          linkedin: '',
-          github: '',
-          summary: '',
-          photoUrl: '',
-        },
-        experience: [],
-        education: [],
-        skillCategories: [],
-        projects: [],
-        certifications: [],
-        theme: 'ai_fusion_2026',
-        accentColor: '#2563eb',
-      });
-    }
+    setResumeData({
+      personalInfo: {
+        fullName: '',
+        jobTitle: '',
+        email: '',
+        phone: '',
+        location: '',
+        website: '',
+        linkedin: '',
+        github: '',
+        summary: '',
+        photoUrl: '',
+      },
+      experience: [],
+      education: [],
+      skillCategories: [],
+      projects: [],
+      certifications: [],
+      theme: 'ai_fusion_2026',
+      accentColor: '#1877f2',
+    });
   };
 
   const TABS = [
-    { id: 'personal',       label: 'IDENTITY',    icon: User },
-    { id: 'experience',     label: 'EXPERIENCE',  icon: Briefcase },
-    { id: 'education',      label: 'EDUCATION',   icon: GraduationCap },
-    { id: 'projects',       label: 'PROJECTS',    icon: Rocket },
-    { id: 'certifications', label: 'CERTS',       icon: Award },
-    { id: 'skills',         label: 'SKILLS',      icon: Code },
-    { id: 'theme',          label: 'THEMES',      icon: Palette },
-    { id: 'ai_assistant',   label: 'AI_ATS',      icon: Sparkles, badge: 'AI' },
+    { id: 'personal',       label: 'Personal',       icon: User },
+    { id: 'experience',     label: 'Experience',     icon: Briefcase },
+    { id: 'education',      label: 'Education',      icon: GraduationCap },
+    { id: 'projects',       label: 'Projects',       icon: Rocket },
+    { id: 'certifications', label: 'Certifications', icon: Award },
+    { id: 'skills',         label: 'Skills',         icon: Code },
+    { id: 'theme',          label: 'Templates',      icon: Palette },
+    { id: 'ai_assistant',   label: 'AI Assistant',   icon: Sparkles, badge: 'AI' },
   ];
 
   return (
-    <div className="min-h-screen bg-[#05070b] text-slate-100 flex flex-col font-sans relative selection:bg-cyan-500 selection:text-black">
-      {/* 3D Particle Canvas Mesh Background */}
-      <CyberParticleCanvas />
-
-      {/* Top Cyber Command Center HUD Bar */}
+    <div className="min-h-screen bg-[#f0f2f5] text-gray-900 flex flex-col font-sans">
+      {/* Professional Header Bar */}
       <Header
         onExportPdf={handleExportPdf}
         onPrint={handlePrint}
@@ -129,33 +122,29 @@ export default function Home() {
         isExporting={isExporting}
       />
 
-      {/* Main Split-Screen Command Workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start z-10 relative">
-        {/* Left Column: Form Command Modules (5 Cols) */}
-        <div className="lg:col-span-6 xl:col-span-5 cyber-glass rounded-2xl border border-cyan-500/30 overflow-hidden flex flex-col min-h-[730px] shadow-[0_0_30px_rgba(0,229,255,0.08)]">
-          {/* Module Tab Navigation — 4×2 grid so all 8 tabs are always visible */}
-          <div className="grid grid-cols-4 border-b border-cyan-500/20 bg-slate-950/80">
+      {/* Main Split-Screen Workspace */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Left Column: Form Panel */}
+        <div className="lg:col-span-6 xl:col-span-5 bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col min-h-[730px] shadow-sm">
+          {/* Tab Navigation */}
+          <div className="grid grid-cols-4 border-b border-gray-200 bg-gray-50">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
-                  onMouseEnter={() => sfx.playHover()}
-                  onClick={() => {
-                    sfx.playClick();
-                    setActiveTab(tab.id as ActiveTab);
-                  }}
-                  className={`flex flex-col items-center justify-center gap-1 py-2.5 px-1 text-[10px] font-mono font-bold transition border-b-2 outline-none ${
+                  onClick={() => setActiveTab(tab.id as ActiveTab)}
+                  className={`flex flex-col items-center justify-center gap-1 py-2.5 px-1 text-[10px] font-semibold transition border-b-2 outline-none ${
                     isActive
-                      ? 'border-cyan-400 text-cyan-300 bg-slate-900 shadow-[0_0_15px_rgba(0,229,255,0.2)]'
-                      : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                      ? 'border-blue-600 text-blue-600 bg-white'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   <div className="relative">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
                     {tab.badge && (
-                      <span className="absolute -top-1.5 -right-2 text-[8px] font-mono font-black uppercase px-0.5 rounded bg-emerald-500 text-black leading-tight">
+                      <span className="absolute -top-1.5 -right-2.5 text-[8px] font-bold uppercase px-1 rounded-full bg-blue-600 text-white leading-tight">
                         {tab.badge}
                       </span>
                     )}
@@ -166,7 +155,7 @@ export default function Home() {
             })}
           </div>
 
-          {/* Module Form Content Area */}
+          {/* Form Content Area */}
           <div className="p-5 flex-1 overflow-y-auto max-h-[calc(100vh-180px)]">
             {activeTab === 'personal' && (
               <PersonalInfoForm
@@ -228,7 +217,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Column: Floating 3D Holographic Resume Preview (7 Cols) */}
+        {/* Right Column: Resume Preview */}
         <div className="lg:col-span-6 xl:col-span-7 sticky top-20 h-[calc(100vh-100px)] hidden lg:block">
           <ResumePreview
             data={resumeData}
@@ -236,12 +225,12 @@ export default function Home() {
           />
         </div>
 
-        {/* Mobile Hologram Fallback */}
-        <div className="block lg:hidden col-span-1 border-t border-cyan-500/20 pt-6">
-          <h3 className="text-xs font-mono font-bold text-cyan-400 uppercase mb-3 flex items-center gap-1.5">
-            <Terminal className="w-4 h-4" /> Live Holographic Canvas
+        {/* Mobile Preview Fallback */}
+        <div className="block lg:hidden col-span-1 border-t border-gray-200 pt-6">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-1.5">
+            📄 Live Preview
           </h3>
-          <div className="h-[600px] overflow-hidden rounded-xl border border-cyan-500/30">
+          <div className="h-[600px] overflow-hidden rounded-xl border border-gray-200 shadow-sm">
             <ResumePreview
               data={resumeData}
               onThemeChange={(theme) => setResumeData({ ...resumeData, theme })}

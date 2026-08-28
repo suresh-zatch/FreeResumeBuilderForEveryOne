@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { FileDown, Printer, RefreshCw, Trash2, ShieldCheck, Terminal, Volume2, VolumeX, Cpu, Loader2 } from 'lucide-react';
-import { sfx } from '@/utils/audioSfx';
+import React from 'react';
+import { FileDown, Printer, RefreshCw, Trash2, FileText, Loader2 } from 'lucide-react';
 
 interface Props {
   onExportPdf: () => void;
@@ -19,126 +18,87 @@ export const Header: React.FC<Props> = ({
   onClearData,
   isExporting = false,
 }) => {
-  const [sfxActive, setSfxActive] = useState<boolean>(true);
-
-  const handleToggleSound = () => {
-    const newState = sfx.toggleSound();
-    setSfxActive(newState);
-  };
-
   return (
-    <header className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-xl border-b border-cyan-500/30 px-4 lg:px-8 py-3 shadow-2xl shadow-cyan-950/50">
-      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-        {/* Command Center Brand Logo & HUD Status */}
+    <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 lg:px-8 py-2.5 shadow-sm">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+        {/* Brand Logo */}
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-slate-900 border border-cyan-400/50 rounded-xl text-cyan-400 shadow-[0_0_15px_rgba(0,229,255,0.3)] flex items-center justify-center">
-            <Terminal className="w-5 h-5 animate-pulse" />
+          <div className="p-2 bg-blue-600 rounded-lg text-white flex items-center justify-center shadow-sm">
+            <FileText className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-black font-mono tracking-wider text-white uppercase flex items-center gap-2">
-                CYBER_BUILDER<span className="text-cyan-400 text-xs">//v2026.4</span>
+              <h1 className="text-base font-bold text-gray-900 tracking-tight">
+                Resume Builder
               </h1>
-              <span className="hidden sm:inline-block text-[9px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/40 shadow-[0_0_10px_rgba(0,255,102,0.2)]">
-                ● SYSTEM: ONLINE
+              <span className="hidden sm:inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">
+                Pro
               </span>
             </div>
-            <p className="text-[10.5px] font-mono text-slate-400 hidden sm:flex items-center gap-2 pt-0.5">
-              <Cpu className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span>OFFENSIVE_RESUME_GENERATOR</span>
-              <span className="text-slate-600">|</span>
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span className="text-emerald-400">100% ATS_COMPLIANT</span>
+            <p className="text-[11px] text-gray-500 hidden sm:flex items-center gap-1.5">
+              <span>Professional Resume Generator</span>
+              <span className="text-gray-300">•</span>
+              <span className="text-green-600 font-medium">ATS Optimized</span>
             </p>
           </div>
         </div>
 
-        {/* HUD Controls & Actions */}
+        {/* Action Controls */}
         <div className="flex items-center gap-2">
-          {/* Audio SFX Toggle */}
+          {/* Reset Sample Data */}
           <button
             type="button"
-            onMouseEnter={() => sfx.playHover()}
-            onClick={handleToggleSound}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold rounded-xl border transition-all ${
-              sfxActive
-                ? 'bg-cyan-950/60 text-cyan-300 border-cyan-500/50 shadow-[0_0_10px_rgba(0,229,255,0.2)]'
-                : 'bg-slate-900 text-slate-500 border-slate-800'
-            }`}
-            title="Toggle Sci-Fi SFX Audio"
+            onClick={onResetSampleData}
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+            title="Load sample data"
           >
-            {sfxActive ? <Volume2 className="w-3.5 h-3.5 text-cyan-400" /> : <VolumeX className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{sfxActive ? 'SFX: ON' : 'SFX: OFF'}</span>
-          </button>
-
-          {/* Reset Pre-fill Sample Data */}
-          <button
-            type="button"
-            onMouseEnter={() => sfx.playHover()}
-            onClick={() => {
-              sfx.playClick();
-              onResetSampleData();
-            }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold text-slate-300 bg-slate-900/80 hover:bg-slate-800 hover:text-white rounded-xl border border-slate-700/80 transition"
-            title="Reload realistic sample 2026 data"
-          >
-            <RefreshCw className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden sm:inline">SAMPLE_DATA</span>
+            <RefreshCw className="w-3.5 h-3.5 text-gray-500" />
+            <span className="hidden sm:inline">Sample Data</span>
           </button>
 
           {/* Clear Form */}
           <button
             type="button"
-            onMouseEnter={() => sfx.playHover()}
             onClick={() => {
-              sfx.playPurge();
-              onClearData();
+              if (window.confirm('Clear all form data?')) onClearData();
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold text-rose-400 bg-rose-950/40 hover:bg-rose-900/60 rounded-xl border border-rose-800/60 transition"
-            title="Purge all fields"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition"
+            title="Clear all data"
           >
-            <Trash2 className="w-3.5 h-3.5 text-rose-400" />
-            <span className="hidden sm:inline">PURGE</span>
+            <Trash2 className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Clear</span>
           </button>
 
-          {/* Native Print / Save PDF */}
+          {/* Print */}
           <button
             type="button"
-            onMouseEnter={() => sfx.playHover()}
-            onClick={() => {
-              sfx.playClick();
-              onPrint();
-            }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold text-slate-200 bg-slate-900 hover:bg-slate-800 rounded-xl border border-slate-700 transition"
-            title="Print or Save as PDF using Browser Print"
+            onClick={onPrint}
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+            title="Print resume"
           >
-            <Printer className="w-3.5 h-3.5 text-slate-300" />
-            <span className="hidden md:inline">PRINT.exe</span>
+            <Printer className="w-3.5 h-3.5 text-gray-500" />
+            <span className="hidden md:inline">Print</span>
           </button>
 
-          {/* Direct PDF Download Button */}
+          {/* Download PDF */}
           <button
             type="button"
             disabled={isExporting}
-            onMouseEnter={() => !isExporting && sfx.playHover()}
             onClick={() => {
-              if (!isExporting) {
-                sfx.playSuccess();
-                onExportPdf();
-              }
+              if (!isExporting) onExportPdf();
             }}
-            className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-extrabold uppercase tracking-wider rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] active:scale-95 transition-all border border-cyan-200 ${
+            className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg shadow-sm transition-all ${
               isExporting
-                ? 'text-slate-700 bg-cyan-200 cursor-not-allowed opacity-80'
-                : 'text-slate-950 bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-300 hover:from-cyan-300 hover:to-emerald-300 cursor-pointer'
+                ? 'text-white bg-blue-400 cursor-not-allowed'
+                : 'text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.98]'
             }`}
           >
             {isExporting ? (
-              <Loader2 className="w-4 h-4 text-slate-700 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <FileDown className="w-4 h-4 text-slate-950" />
+              <FileDown className="w-4 h-4" />
             )}
-            <span>{isExporting ? 'GENERATING...' : 'GENERATE_PDF.exe'}</span>
+            <span>{isExporting ? 'Generating...' : 'Download PDF'}</span>
           </button>
         </div>
       </div>

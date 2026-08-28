@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
 import { Mail, Phone, MapPin, Globe } from 'lucide-react';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 const LinkedinIcon = () => (
   <svg className="w-3.5 h-3.5 shrink-0 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -59,13 +60,13 @@ export const ModernTemplate: React.FC<Props> = ({ data }) => {
               {personalInfo.email && (
                 <div className="flex items-center gap-1.5 break-all">
                   <Mail className="w-3.5 h-3.5 shrink-0 text-gray-400" />
-                  <span>{personalInfo.email}</span>
+                  <ContactLink value={personalInfo.email} type="email" />
                 </div>
               )}
               {personalInfo.phone && (
                 <div className="flex items-center gap-1.5">
                   <Phone className="w-3.5 h-3.5 shrink-0 text-gray-400" />
-                  <span>{personalInfo.phone}</span>
+                  <ContactLink value={personalInfo.phone} type="phone" />
                 </div>
               )}
               {personalInfo.location && (
@@ -77,19 +78,19 @@ export const ModernTemplate: React.FC<Props> = ({ data }) => {
               {personalInfo.website && (
                 <div className="flex items-center gap-1.5 break-all">
                   <Globe className="w-3.5 h-3.5 shrink-0 text-gray-400" />
-                  <span>{personalInfo.website}</span>
+                  <ContactLink value={personalInfo.website} type="website" />
                 </div>
               )}
               {personalInfo.linkedin && (
                 <div className="flex items-center gap-1.5 break-all">
                   <LinkedinIcon />
-                  <span>{personalInfo.linkedin}</span>
+                  <ContactLink value={personalInfo.linkedin} type="linkedin" />
                 </div>
               )}
               {personalInfo.github && (
                 <div className="flex items-center gap-1.5 break-all">
                   <GithubIcon />
-                  <span>{personalInfo.github}</span>
+                  <ContactLink value={personalInfo.github} type="github" />
                 </div>
               )}
             </div>

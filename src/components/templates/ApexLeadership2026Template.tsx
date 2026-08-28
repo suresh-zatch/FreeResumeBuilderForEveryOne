@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -20,12 +21,12 @@ export const ApexLeadership2026Template: React.FC<Props> = ({ data }) => {
         </div>
         
         <div className="flex-1 flex flex-col items-end text-sm text-gray-600 font-medium space-y-1">
-          {personalInfo?.email && <div>{personalInfo.email}</div>}
-          {personalInfo?.phone && <div>{personalInfo.phone}</div>}
+          {personalInfo?.email && <div><ContactLink value={personalInfo.email} type="email" /></div>}
+          {personalInfo?.phone && <div><ContactLink value={personalInfo.phone} type="phone" /></div>}
           {personalInfo?.location && <div>{personalInfo.location}</div>}
-          {personalInfo?.linkedin && <div>{personalInfo.linkedin}</div>}
-          {personalInfo?.github && <div>{personalInfo.github}</div>}
-          {personalInfo?.website && <div>{personalInfo.website}</div>}
+          {personalInfo?.linkedin && <div><ContactLink value={personalInfo.linkedin} type="linkedin" /></div>}
+          {personalInfo?.github && <div><ContactLink value={personalInfo.github} type="github" /></div>}
+          {personalInfo?.website && <div><ContactLink value={personalInfo.website} type="website" /></div>}
         </div>
       </header>
 

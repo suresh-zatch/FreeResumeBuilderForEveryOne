@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -15,7 +16,7 @@ export const NordicMinimal2026Template: React.FC<Props> = ({ data }) => {
     personalInfo?.website,
     personalInfo?.linkedin,
     personalInfo?.github
-  ].filter(Boolean);
+  ].filter(Boolean) as string[];
 
   return (
     <div className="w-full bg-[#fcfcfc] text-stone-800 min-h-[1050px] p-12 font-sans box-border">
@@ -33,7 +34,7 @@ export const NordicMinimal2026Template: React.FC<Props> = ({ data }) => {
         <div className="flex flex-wrap justify-center items-center gap-3 mt-4 text-xs text-stone-500 uppercase tracking-wider">
           {contactItems.map((item, index) => (
             <React.Fragment key={index}>
-              <span>{item}</span>
+              <ContactLink value={item} type={getContactType(item, personalInfo)} />
               {index < contactItems.length - 1 && <span className="w-1 h-1 rounded-full bg-stone-300"></span>}
             </React.Fragment>
           ))}

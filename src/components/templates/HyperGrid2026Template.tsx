@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -20,12 +21,12 @@ export const HyperGrid2026Template: React.FC<Props> = ({ data }) => {
             </h1>
             <p className="text-xl text-gray-600 font-medium mb-4">{personalInfo?.jobTitle}</p>
             <div className="flex flex-wrap justify-center md:justify-start gap-3 text-sm text-gray-500 font-medium">
-              {personalInfo?.email && <span className="bg-gray-100 px-3 py-1 rounded-lg">{personalInfo.email}</span>}
-              {personalInfo?.phone && <span className="bg-gray-100 px-3 py-1 rounded-lg">{personalInfo.phone}</span>}
+              {personalInfo?.email && <ContactLink value={personalInfo.email} type="email" className="bg-gray-100 px-3 py-1 rounded-lg" />}
+              {personalInfo?.phone && <ContactLink value={personalInfo.phone} type="phone" className="bg-gray-100 px-3 py-1 rounded-lg" />}
               {personalInfo?.location && <span className="bg-gray-100 px-3 py-1 rounded-lg">{personalInfo.location}</span>}
-              {personalInfo?.website && <span className="bg-gray-100 px-3 py-1 rounded-lg">{personalInfo.website}</span>}
-              {personalInfo?.linkedin && <span className="bg-gray-100 px-3 py-1 rounded-lg">{personalInfo.linkedin}</span>}
-              {personalInfo?.github && <span className="bg-gray-100 px-3 py-1 rounded-lg">{personalInfo.github}</span>}
+              {personalInfo?.website && <ContactLink value={personalInfo.website} type="website" className="bg-gray-100 px-3 py-1 rounded-lg" />}
+              {personalInfo?.linkedin && <ContactLink value={personalInfo.linkedin} type="linkedin" className="bg-gray-100 px-3 py-1 rounded-lg" />}
+              {personalInfo?.github && <ContactLink value={personalInfo.github} type="github" className="bg-gray-100 px-3 py-1 rounded-lg" />}
             </div>
           </div>
           {personalInfo?.photoUrl && (

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -27,12 +28,12 @@ export const QuantumClean2026Template: React.FC<Props> = ({ data }) => {
         </div>
         
         <div className="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm font-medium uppercase tracking-wider">
-          {personalInfo?.email && <div>{personalInfo.email}</div>}
-          {personalInfo?.phone && <div>{personalInfo.phone}</div>}
+          {personalInfo?.email && <div><ContactLink value={personalInfo.email} type="email" /></div>}
+          {personalInfo?.phone && <div><ContactLink value={personalInfo.phone} type="phone" /></div>}
           {personalInfo?.location && <div>{personalInfo.location}</div>}
-          {personalInfo?.website && <div>{personalInfo.website}</div>}
-          {personalInfo?.linkedin && <div>{personalInfo.linkedin}</div>}
-          {personalInfo?.github && <div>{personalInfo.github}</div>}
+          {personalInfo?.website && <div><ContactLink value={personalInfo.website} type="website" /></div>}
+          {personalInfo?.linkedin && <div><ContactLink value={personalInfo.linkedin} type="linkedin" /></div>}
+          {personalInfo?.github && <div><ContactLink value={personalInfo.github} type="github" /></div>}
         </div>
       </header>
 

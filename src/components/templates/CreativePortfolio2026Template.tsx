@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -50,7 +51,7 @@ export const CreativePortfolio2026Template: React.FC<Props> = ({ data }) => {
               {contactItems.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0" />
-                  <span>{item}</span>
+                  <ContactLink value={item} type={getContactType(item, personalInfo)} />
                 </div>
               ))}
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -28,7 +29,7 @@ export const ExecutiveTemplate: React.FC<Props> = ({ data }) => {
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-slate-400 font-medium">
             {contactItems.map((item, index) => (
               <span key={index} className="flex items-center">
-                {item}
+                <ContactLink value={item} type={getContactType(item, personalInfo)} />
                 {index < contactItems.length - 1 && <span className="mx-3 text-slate-600">•</span>}
               </span>
             ))}

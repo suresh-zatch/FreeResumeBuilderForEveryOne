@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -37,10 +38,10 @@ export const MonochromeChic2026Template: React.FC<Props> = ({ data }) => {
         </div>
         
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs tracking-[0.1em] text-[#555555] uppercase font-light">
-          {personalInfo?.email && <span>{personalInfo.email}</span>}
-          {personalInfo?.phone && <span>{personalInfo.phone}</span>}
+          {personalInfo?.email && <ContactLink value={personalInfo.email} type="email" />}
+          {personalInfo?.phone && <ContactLink value={personalInfo.phone} type="phone" />}
           {personalInfo?.location && <span>{personalInfo.location}</span>}
-          {personalInfo?.website && <span>{personalInfo.website}</span>}
+          {personalInfo?.website && <ContactLink value={personalInfo.website} type="website" />}
         </div>
       </header>
 

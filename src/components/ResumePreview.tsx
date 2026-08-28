@@ -28,8 +28,7 @@ import { ElegantTemplate } from '@/components/templates/ElegantTemplate';
 import { BoldTemplate } from '@/components/templates/BoldTemplate';
 import { CompactTemplate } from '@/components/templates/CompactTemplate';
 import { ProfessionalTemplate } from '@/components/templates/ProfessionalTemplate';
-import { ZoomIn, ZoomOut, RotateCcw, Palette, Maximize2, X, Box } from 'lucide-react';
-import { sfx } from '@/utils/audioSfx';
+import { ZoomIn, ZoomOut, RotateCcw, Palette, Maximize2, X } from 'lucide-react';
 
 interface Props {
   data: ResumeData;
@@ -66,27 +65,9 @@ const THEME_OPTIONS: { id: ResumeTheme; name: string }[] = [
 ];
 
 export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', onThemeChange }) => {
-  const [zoom, setZoom] = useState<number>(0.95); // Increased default zoom for larger readable text
-  const [is3DEnabled, setIs3DEnabled] = useState<boolean>(true);
+  const [zoom, setZoom] = useState<number>(0.95);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [tilt, setTilt] = useState<{ rx: number; ry: number }>({ rx: 0, ry: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!is3DEnabled || !containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-
-    const ry = (x / (rect.width / 2)) * 4;  // Subtle crisp 3D tilt
-    const rx = -(y / (rect.height / 2)) * 4;
-
-    setTilt({ rx, ry });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ rx: 0, ry: 0 });
-  };
 
   const renderTemplate = () => {
     switch (data.theme) {
@@ -147,29 +128,26 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
 
   return (
     <>
-      <div className="flex flex-col h-full bg-slate-950 rounded-2xl border border-cyan-500/30 shadow-[0_0_35px_rgba(0,229,255,0.15)] overflow-hidden">
-        {/* Hologram Controls Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-slate-900 border-b border-cyan-500/30 text-xs font-mono">
+      <div className="flex flex-col h-full bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        {/* Preview Controls Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-gray-50 border-b border-gray-200 text-xs">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="font-bold text-cyan-300 tracking-wider">LIVE_HOLOGRAM_PREVIEW</span>
+            <span className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="font-semibold text-gray-700">Live Preview</span>
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Instant Theme Dropdown Selector */}
+            {/* Theme Selector Dropdown */}
             {onThemeChange && (
-              <div className="flex items-center gap-1.5 bg-slate-950 border border-cyan-400/50 rounded-xl px-2.5 py-1 shadow-[0_0_10px_rgba(0,229,255,0.2)]">
-                <Palette className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <div className="flex items-center gap-1.5 bg-white border border-gray-300 rounded-lg px-2.5 py-1 shadow-sm">
+                <Palette className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 <select
                   value={data.theme}
-                  onChange={(e) => {
-                    sfx.playClick();
-                    onThemeChange(e.target.value as ResumeTheme);
-                  }}
-                  className="text-xs font-mono font-bold text-cyan-300 bg-transparent outline-none cursor-pointer py-0.5"
+                  onChange={(e) => onThemeChange(e.target.value as ResumeTheme)}
+                  className="text-xs font-medium text-gray-700 bg-transparent outline-none cursor-pointer py-0.5"
                 >
                   {THEME_OPTIONS.map((t) => (
-                    <option key={t.id} value={t.id} className="bg-slate-900 text-white font-mono">
+                    <option key={t.id} value={t.id} className="bg-white text-gray-900">
                       {t.name}
                     </option>
                   ))}
@@ -177,76 +155,41 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
               </div>
             )}
 
-            {/* 3D Tilt Toggle */}
+            {/* Fullscreen */}
             <button
               type="button"
-              onMouseEnter={() => sfx.playHover()}
-              onClick={() => {
-                sfx.playClick();
-                setIs3DEnabled((prev) => !prev);
-              }}
-              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-mono font-bold border transition ${
-                is3DEnabled
-                  ? 'bg-cyan-950 text-cyan-300 border-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]'
-                  : 'bg-slate-900 text-slate-500 border-slate-800'
-              }`}
-              title="Toggle 3D Mouse Tilt Mode"
-            >
-              <Box className="w-3.5 h-3.5" />
-              <span>{is3DEnabled ? '3D: ON' : '3D: OFF'}</span>
-            </button>
-
-            {/* Fullscreen Maximize */}
-            <button
-              type="button"
-              onMouseEnter={() => sfx.playHover()}
-              onClick={() => {
-                sfx.playClick();
-                setIsFullscreen(true);
-              }}
-              className="p-1.5 bg-slate-950 text-cyan-400 hover:text-white border border-slate-800 rounded-xl transition"
-              title="Maximize Fullscreen View"
+              onClick={() => setIsFullscreen(true)}
+              className="p-1.5 bg-white text-gray-500 hover:text-blue-600 border border-gray-300 rounded-lg transition shadow-sm"
+              title="Fullscreen View"
             >
               <Maximize2 className="w-3.5 h-3.5" />
             </button>
 
             {/* Zoom Controls */}
-            <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl p-0.5">
+            <div className="flex items-center gap-0.5 bg-white border border-gray-300 rounded-lg p-0.5 shadow-sm">
               <button
                 type="button"
-                onMouseEnter={() => sfx.playHover()}
-                onClick={() => {
-                  sfx.playClick();
-                  setZoom((z) => Math.max(0.6, z - 0.05));
-                }}
-                className="p-1 hover:bg-slate-800 rounded text-cyan-400 transition"
+                onClick={() => setZoom((z) => Math.max(0.6, z - 0.05))}
+                className="p-1 hover:bg-gray-100 rounded text-gray-500 transition"
                 title="Zoom Out"
               >
                 <ZoomOut className="w-3.5 h-3.5" />
               </button>
-              <span className="px-1 font-mono text-[11px] text-cyan-300 min-w-[36px] text-center font-bold">
+              <span className="px-1.5 text-[11px] text-gray-600 min-w-[36px] text-center font-medium">
                 {Math.round(zoom * 100)}%
               </span>
               <button
                 type="button"
-                onMouseEnter={() => sfx.playHover()}
-                onClick={() => {
-                  sfx.playClick();
-                  setZoom((z) => Math.min(1.3, z + 0.05));
-                }}
-                className="p-1 hover:bg-slate-800 rounded text-cyan-400 transition"
+                onClick={() => setZoom((z) => Math.min(1.3, z + 0.05))}
+                className="p-1 hover:bg-gray-100 rounded text-gray-500 transition"
                 title="Zoom In"
               >
                 <ZoomIn className="w-3.5 h-3.5" />
               </button>
               <button
                 type="button"
-                onMouseEnter={() => sfx.playHover()}
-                onClick={() => {
-                  sfx.playClick();
-                  setZoom(0.95);
-                }}
-                className="p-1 hover:bg-slate-800 rounded text-slate-400 transition border-l border-slate-800 pl-1.5"
+                onClick={() => setZoom(0.95)}
+                className="p-1 hover:bg-gray-100 rounded text-gray-400 transition border-l border-gray-200 pl-1"
                 title="Reset Zoom"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -255,28 +198,23 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
           </div>
         </div>
 
-        {/* Crisp Viewport Canvas */}
+        {/* Preview Canvas */}
         <div
           ref={containerRef}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          className="flex-1 overflow-auto p-4 flex justify-center items-start bg-slate-950/90 cursor-grab active:cursor-grabbing"
-          style={{ perspective: '1200px' }}
+          className="flex-1 overflow-auto p-4 flex justify-center items-start bg-gray-100"
         >
           <div
             className="transition-transform duration-100 ease-out origin-top"
             style={{
-              transform: `scale(${zoom}) ${is3DEnabled ? `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)` : ''}`,
-              transformStyle: is3DEnabled ? 'preserve-3d' : 'flat',
+              transform: `scale(${zoom})`,
               WebkitFontSmoothing: 'antialiased',
-              MozOsxFontSmoothing: 'grayscale',
-              willChange: 'transform',
+              MozOsxFontSmoothing: 'grayscale' as never,
             }}
           >
-            {/* Target capturing element for PDF Export - High Contrast Clean A4 Paper */}
+            {/* A4 Paper for PDF Export */}
             <div
               id={id}
-              className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-[0_0_35px_rgba(0,229,255,0.25)] overflow-hidden border border-cyan-400/40 relative antialiased"
+              className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-lg overflow-hidden border border-gray-200 antialiased"
             >
               {renderTemplate()}
             </div>
@@ -284,24 +222,24 @@ export const ResumePreview: React.FC<Props> = ({ data, id = 'resume-preview', on
         </div>
       </div>
 
-      {/* Fullscreen Maximized Modal */}
+      {/* Fullscreen Modal */}
       {isFullscreen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col p-4">
-          <div className="flex items-center justify-between pb-3 border-b border-cyan-500/30 text-white font-mono">
-            <span className="text-sm font-bold text-cyan-300 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-              FULLSCREEN_HOLOGRAM_VIEWPORT (100% SCALE)
+        <div className="fixed inset-0 z-50 bg-gray-900/80 backdrop-blur-sm flex flex-col p-4">
+          <div className="flex items-center justify-between pb-3 border-b border-gray-700 text-white">
+            <span className="text-sm font-semibold flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500" />
+              Fullscreen Preview
             </span>
             <button
               type="button"
               onClick={() => setIsFullscreen(false)}
-              className="p-1.5 bg-slate-900 border border-slate-700 hover:border-cyan-400 rounded-xl text-cyan-300"
+              className="p-1.5 bg-gray-800 border border-gray-600 hover:border-gray-400 rounded-lg text-gray-300 hover:text-white transition"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
           <div className="flex-1 overflow-auto p-6 flex justify-center items-start">
-            <div className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-2xl overflow-hidden border border-cyan-400/40 antialiased">
+            <div className="w-[210mm] min-h-[297mm] bg-white text-slate-900 rounded-lg shadow-2xl overflow-hidden border border-gray-300 antialiased">
               {renderTemplate()}
             </div>
           </div>

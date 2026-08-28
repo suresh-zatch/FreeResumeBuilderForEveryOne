@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -29,12 +30,12 @@ export const GradientPulse2026Template: React.FC<Props> = ({ data }) => {
             <h1 className="text-4xl font-extrabold tracking-tight">{personalInfo?.fullName}</h1>
             <p className="text-xl font-medium mt-1 opacity-90">{personalInfo?.jobTitle}</p>
             <div className="flex flex-wrap gap-4 mt-4 text-sm opacity-80">
-              {personalInfo?.email && <span>{personalInfo.email}</span>}
-              {personalInfo?.phone && <span>{personalInfo.phone}</span>}
+              {personalInfo?.email && <ContactLink value={personalInfo.email} type="email" />}
+              {personalInfo?.phone && <ContactLink value={personalInfo.phone} type="phone" />}
               {personalInfo?.location && <span>{personalInfo.location}</span>}
-              {personalInfo?.website && <span>{personalInfo.website}</span>}
-              {personalInfo?.linkedin && <span>{personalInfo.linkedin}</span>}
-              {personalInfo?.github && <span>{personalInfo.github}</span>}
+              {personalInfo?.website && <ContactLink value={personalInfo.website} type="website" />}
+              {personalInfo?.linkedin && <ContactLink value={personalInfo.linkedin} type="linkedin" />}
+              {personalInfo?.github && <ContactLink value={personalInfo.github} type="github" />}
             </div>
           </div>
         </div>

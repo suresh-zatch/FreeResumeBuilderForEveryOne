@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/types/resume';
+import { ContactLink, getContactType } from '@/utils/contactLinks';
 
 interface Props {
   data: ResumeData;
@@ -46,12 +47,12 @@ export const MetroCompact2026Template: React.FC<Props> = ({ data }) => {
             <h3 className="text-lg font-bold uppercase tracking-wider text-gray-900 border-b-2 pb-1 mb-2" style={{ borderColor: accentColor }}>
               Contact
             </h3>
-            {personalInfo?.email && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">Email</span> {personalInfo.email}</div>}
-            {personalInfo?.phone && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">Phone</span> {personalInfo.phone}</div>}
+            {personalInfo?.email && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">Email</span> <ContactLink value={personalInfo.email} type="email" /></div>}
+            {personalInfo?.phone && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">Phone</span> <ContactLink value={personalInfo.phone} type="phone" /></div>}
             {personalInfo?.location && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">Location</span> {personalInfo.location}</div>}
-            {personalInfo?.website && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">Website</span> {personalInfo.website}</div>}
-            {personalInfo?.linkedin && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">LinkedIn</span> {personalInfo.linkedin}</div>}
-            {personalInfo?.github && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">GitHub</span> {personalInfo.github}</div>}
+            {personalInfo?.website && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">Website</span> <ContactLink value={personalInfo.website} type="website" /></div>}
+            {personalInfo?.linkedin && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">LinkedIn</span> <ContactLink value={personalInfo.linkedin} type="linkedin" /></div>}
+            {personalInfo?.github && <div className="flex items-center gap-2"><span className="font-semibold w-20 text-gray-500">GitHub</span> <ContactLink value={personalInfo.github} type="github" /></div>}
           </section>
 
           {skillCategories && skillCategories.length > 0 && (

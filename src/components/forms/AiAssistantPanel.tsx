@@ -7,7 +7,6 @@ import {
   Code2, Cloud, Briefcase, Database, BarChart2, Palette,
   HeartPulse, DollarSign, Megaphone, Shield, FlaskConical,
 } from 'lucide-react';
-import { sfx } from '@/utils/audioSfx';
 
 interface Props {
   data: ResumeData;
@@ -438,49 +437,49 @@ export const AiAssistantPanel: React.FC<Props> = ({ data, onApplyPreset }) => {
   };
 
   const { score, checks } = computeAtsScore();
-  const scoreColor = score >= 80 ? 'text-emerald-400' : score >= 50 ? 'text-amber-400' : 'text-rose-400';
-  const barColor   = score >= 80 ? 'bg-emerald-400' : score >= 50 ? 'bg-amber-400' : 'bg-rose-500';
+  const scoreColor = score >= 80 ? 'text-emerald-600' : score >= 50 ? 'text-amber-600' : 'text-red-600';
+  const barColor   = score >= 80 ? 'bg-emerald-500' : score >= 50 ? 'bg-amber-500' : 'bg-red-500';
 
   const filtered = activeCategory === 'all'
     ? ROLE_PRESETS
     : ROLE_PRESETS.filter((p) => p.category === activeCategory);
 
   return (
-    <div className="space-y-5 text-slate-100">
+    <div className="space-y-5">
       {/* Header */}
-      <div className="flex items-center gap-2 pb-3 border-b border-cyan-500/20">
-        <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
+      <div className="flex items-center gap-2 pb-3 border-b border-gray-200">
+        <Sparkles className="w-5 h-5 text-blue-600" />
         <div>
-          <h2 className="text-sm font-extrabold font-mono tracking-wider text-white uppercase">AI_ATS Optimizer</h2>
-          <p className="text-[10px] text-slate-400 font-mono">Real-time ATS score + {ROLE_PRESETS.length} 1-click 2026 role presets</p>
+          <h2 className="text-sm font-bold text-gray-900">AI & ATS Optimization</h2>
+          <p className="text-xs text-gray-500">Real-time ATS score & {ROLE_PRESETS.length} professional 1-click role presets</p>
         </div>
       </div>
 
       {/* ATS Score Card */}
-      <div className="p-4 bg-gradient-to-br from-slate-900 via-cyan-950/40 to-slate-900 rounded-2xl border border-cyan-500/20 space-y-3">
+      <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+            <ShieldCheck className="w-5 h-5 text-emerald-600" />
             <div>
-              <h3 className="text-xs font-bold text-white font-mono">ATS READABILITY SCORE</h3>
-              <p className="text-[10px] text-slate-400 font-mono">2026 AI-Driven ATS Compatibility</p>
+              <h3 className="text-xs font-bold text-gray-900">ATS Readability Score</h3>
+              <p className="text-[11px] text-gray-500">AI-driven ATS Compatibility Analysis</p>
             </div>
           </div>
-          <div className="flex items-baseline gap-1 bg-black/30 px-3 py-1.5 rounded-xl border border-white/10">
-            <span className={`text-3xl font-extrabold font-mono ${scoreColor}`}>{score}</span>
-            <span className="text-xs text-slate-400 font-mono">/100</span>
+          <div className="flex items-baseline gap-1 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-xs">
+            <span className={`text-2xl font-extrabold ${scoreColor}`}>{score}</span>
+            <span className="text-xs text-gray-400">/100</span>
           </div>
         </div>
-        <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+        <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
           <div className={`h-full transition-all duration-700 ${barColor}`} style={{ width: `${score}%` }} />
         </div>
         <div className="space-y-1.5 pt-1">
           {checks.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-2 text-[11px] font-mono">
+            <div key={idx} className="flex items-center gap-2 text-xs">
               {item.pass
-                ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                : <AlertCircle  className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
-              <span className={item.pass ? 'text-slate-300' : 'text-amber-300'}>{item.text}</span>
+                ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                : <AlertCircle  className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
+              <span className={item.pass ? 'text-gray-700' : 'text-amber-700'}>{item.text}</span>
             </div>
           ))}
         </div>
@@ -488,9 +487,9 @@ export const AiAssistantPanel: React.FC<Props> = ({ data, onApplyPreset }) => {
 
       {/* 1-Click Role Presets */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-300 font-mono">
-          <Zap className="w-4 h-4 text-amber-400" />
-          1-Click 2026 Role Samples ({ROLE_PRESETS.length} roles)
+        <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
+          <Zap className="w-4 h-4 text-amber-500" />
+          Role Presets ({ROLE_PRESETS.length} Profiles)
         </div>
 
         {/* Category filter pills */}
@@ -502,22 +501,22 @@ export const AiAssistantPanel: React.FC<Props> = ({ data, onApplyPreset }) => {
               <button
                 key={cat.id}
                 type="button"
-                onClick={() => { sfx.playClick(); setActiveCategory(cat.id); }}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold whitespace-nowrap transition border shrink-0 ${
+                onClick={() => { setActiveCategory(cat.id); }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition border shrink-0 ${
                   isActive
-                    ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_8px_rgba(0,229,255,0.3)]'
-                    : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-slate-200'
+                    ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-xs'
+                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                <CatIcon className="w-3 h-3" />
+                <CatIcon className="w-3.5 h-3.5" />
                 {cat.label}
               </button>
             );
           })}
         </div>
 
-        {/* Role cards — 2-column compact grid, no inner scroll */}
-        <div className="grid grid-cols-2 gap-2">
+        {/* Role cards — 2-column compact grid */}
+        <div className="grid grid-cols-2 gap-2.5">
           {filtered.map((preset, i) => {
             const globalIdx = ROLE_PRESETS.indexOf(preset);
             const isApplied = appliedIdx === globalIdx;
@@ -526,51 +525,50 @@ export const AiAssistantPanel: React.FC<Props> = ({ data, onApplyPreset }) => {
                 key={i}
                 type="button"
                 onClick={() => {
-                  sfx.playSuccess();
                   onApplyPreset({ ...preset.data, theme: preset.theme, accentColor: preset.accentColor });
                   setAppliedIdx(globalIdx);
                   setTimeout(() => setAppliedIdx(null), 2000);
                 }}
                 className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition group w-full ${
                   isApplied
-                    ? 'bg-emerald-500/10 border-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.2)]'
-                    : 'bg-slate-900/80 border-slate-700/80 hover:border-cyan-500/60 hover:bg-cyan-950/30'
+                    ? 'bg-emerald-50 border-emerald-400 shadow-xs'
+                    : 'bg-white border-gray-200 hover:border-blue-300 hover:bg-blue-50/30 shadow-xs'
                 }`}
               >
                 <span className="text-2xl">{preset.emoji}</span>
-                <span className="text-[10px] font-bold font-mono text-white leading-tight group-hover:text-cyan-300 transition line-clamp-2">
+                <span className="text-xs font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition line-clamp-2">
                   {preset.title}
                 </span>
-                <span className={`mt-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-mono font-bold border ${
+                <span className={`mt-auto inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-semibold border ${
                   isApplied
-                    ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
-                    : 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400'
+                    ? 'bg-emerald-100 border-emerald-300 text-emerald-700'
+                    : 'bg-gray-50 border-gray-200 text-gray-600 group-hover:bg-blue-50 group-hover:border-blue-200 group-hover:text-blue-600'
                 }`}>
-                  {isApplied ? <CheckCircle2 className="w-2.5 h-2.5" /> : <ArrowRight className="w-2.5 h-2.5" />}
-                  {isApplied ? 'APPLIED!' : 'APPLY'}
+                  {isApplied ? <CheckCircle2 className="w-3 h-3" /> : <ArrowRight className="w-3 h-3" />}
+                  {isApplied ? 'Applied' : 'Apply Preset'}
                 </span>
               </button>
             );
           })}
           {filtered.length === 0 && (
-            <p className="col-span-2 text-center text-slate-500 font-mono text-xs py-4">No presets in this category yet.</p>
+            <p className="col-span-2 text-center text-gray-400 text-xs py-4">No presets in this category yet.</p>
           )}
         </div>
       </div>
 
       {/* Power Action Verbs */}
-      <div className="p-4 bg-slate-900/60 border border-slate-700/60 rounded-xl space-y-2">
-        <h4 className="text-[11px] font-bold text-slate-300 font-mono flex items-center gap-1.5 uppercase tracking-wider">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          High-Impact Action Verbs (click to copy)
+      <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
+        <h4 className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+          High-Impact Action Verbs (Click to copy)
         </h4>
         <div className="flex flex-wrap gap-1.5">
           {ACTION_VERBS.map((verb) => (
             <button
               key={verb}
               type="button"
-              onClick={() => { navigator.clipboard.writeText(verb); sfx.playClick(); }}
-              className="px-2 py-1 text-[10px] font-mono font-medium bg-slate-800 text-slate-300 border border-slate-700 rounded-md hover:border-cyan-400/60 hover:text-cyan-300 transition"
+              onClick={() => { navigator.clipboard.writeText(verb); }}
+              className="px-2.5 py-1 text-xs font-medium bg-white text-gray-700 border border-gray-200 rounded-md hover:border-blue-400 hover:text-blue-600 transition shadow-2xs"
             >
               {verb}
             </button>
