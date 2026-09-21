@@ -53,12 +53,12 @@ export default function Home() {
     }
   }, [resumeData]);
 
-  const handleExportPdf = async () => {
+  const handleExportPdf = async (mode: 'smart' | 'single-page' = 'smart') => {
     if (isExporting) return;
     setIsExporting(true);
     try {
       const name = resumeData.personalInfo.fullName.trim() || 'Resume';
-      await exportResumeToPdf('resume-preview', `${name.replace(/\s+/g, '_')}_Resume.pdf`);
+      await exportResumeToPdf('resume-preview', `${name.replace(/\s+/g, '_')}_Resume.pdf`, mode);
     } catch (e) {
       console.error('[Page] PDF export error:', e);
     } finally {
