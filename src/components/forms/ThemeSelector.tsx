@@ -109,6 +109,67 @@ const THEMES_2026: ThemeMeta[] = [
     description: 'Strategic VP/Director layout with prominent header summary box & 2-column skills alignment.',
     tag: '🏢 Corporate Lead',
   },
+  // ── Classic Templates ──────────────────────────────────────────────────
+  {
+    id: 'modern',
+    name: 'Modern Classic',
+    description: 'Clean two-column layout with colored sidebar, skill bars, and icon-accented contact details.',
+    tag: '📋 Classic',
+  },
+  {
+    id: 'minimal',
+    name: 'Minimal Pure',
+    description: 'Ultra-clean single-column design focused on content clarity and maximum ATS readability.',
+    tag: '⚪ Minimal',
+  },
+  {
+    id: 'classic',
+    name: 'Classic Standard',
+    description: 'Traditional resume format with centered header, horizontal rules, and serif-inspired headings.',
+    tag: '📜 Traditional',
+  },
+  {
+    id: 'executive',
+    name: 'Executive Standard',
+    description: 'Dark navy header with white text, accent bar dividers, and authoritative serif typography.',
+    tag: '🎩 Executive',
+  },
+  {
+    id: 'creative',
+    name: 'Creative Sidebar',
+    description: 'Colored left sidebar with name, contact & skills. Main area for experience and projects.',
+    tag: '🎨 Sidebar',
+  },
+  {
+    id: 'technical',
+    name: 'Technical Code',
+    description: 'Monospace-accented developer resume with code-comment headings and inline skill badges.',
+    tag: '💻 Developer',
+  },
+  {
+    id: 'elegant',
+    name: 'Elegant Serif',
+    description: 'Refined luxury design with thin borders, wide letter spacing, and graceful serif headings.',
+    tag: '✒️ Elegant',
+  },
+  {
+    id: 'bold',
+    name: 'Bold Impact',
+    description: 'High-contrast design with bold section headers, strong accent colors, and impactful layout.',
+    tag: '💥 Bold',
+  },
+  {
+    id: 'compact',
+    name: 'Compact Density',
+    description: 'Space-efficient two-column layout to fit maximum content on a single page.',
+    tag: '📐 Compact',
+  },
+  {
+    id: 'professional',
+    name: 'Professional Grid',
+    description: 'Clean grid-based layout with structured sections, subtle borders, and professional spacing.',
+    tag: '🏛️ Professional',
+  },
 ];
 
 const PRESET_COLORS = [
@@ -362,7 +423,7 @@ export const ThemeSelector: React.FC<Props> = ({
           <Palette className="w-4 h-4 text-blue-600" />
           Template & Color Themes
         </h2>
-        <p className="text-xs text-gray-500 mt-0.5">Choose from 15 resume themes and pick any accent color you want.</p>
+        <p className="text-xs text-gray-500 mt-0.5">Choose from 25 resume themes and pick any accent color you want.</p>
       </div>
 
       {/* Full Color Picker */}
@@ -401,7 +462,7 @@ export const ThemeSelector: React.FC<Props> = ({
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-blue-600" />
             <h3 className="text-xs font-bold text-gray-900">
-              15 Newly Designed Themes
+              25 Resume Themes
             </h3>
           </div>
         </div>
